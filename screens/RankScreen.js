@@ -3,180 +3,309 @@ import {
   ScrollView,
   StyleSheet,
   Animated,
+  Dimensions,
   View,
-  Text,
+  Image,
   TouchableOpacity,
-  Image
+  FlatList,
+  Text,
+  ActivityIndicator
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { ExpoLinksView } from '@expo/samples';
+import _ from 'lodash';
+
 import { connect } from 'react-redux';
-import { Card, Button, ButtonGroup, SocialIcon, ListItem, List } from 'react-native-elements';
-import Modal from 'react-native-modalbox';
+import { Badge, Button, ButtonGroup, Card, ListItem, List, SearchBar } from 'react-native-elements';
 
 import * as actions from '../actions';
 import * as apis from '../api';
 
+import Checkbox2  from '../components/Checkbox2';
 import RankCard  from '../components/RankCard';
-import { CardSection } from '../components/common';
+
+var screen = Dimensions.get('window');
 
 class RankScreen extends React.Component {
+    constructor(props) {
+      super(props);
 
-  constructor(props) {
-    super(props);
-    this._setFocusFood = this._setFocusFood.bind(this);
-  }
+      this._setFocusFood = this._setFocusFood.bind(this);
+      this.state = {
+        loading: false,
+        vegetable: {
+          data: [],
+          page: 1,
+          lastKnownVal: null,
+        },
+        fish: {
+          data: [],
+          page: 1,
+          lastKnownVal: null,
+        },
+        seed: 1,
+        error: null,
+        refreshing: false,
+        selectedIndex: 0,
+        fadeAnim: new Animated.Value(0),
+      };
+    }
 
-  static navigationOptions = {
-    title: '排行榜',
-    headerTintColor: "#2c3e50",
-    headerStyle: {
-     backgroundColor:"#f1c40f"
-   }
-  };
+    static navigationOptions = ({navigation}) => {
+      const { params = {} } = navigation.state;
+      return {
+        title: `排行榜`,
+        headerTintColor: "#2c3e50",
+        headerStyle: {
+           backgroundColor:"#f1c40f"
+        }
+      };
+    };
 
-  state = {
-    mapLoaded: false,
-    isOpen: false,
-    isDisabled: false,
-    swipeToClose: true,
-    sliderValue: 0.3,
-    selectedIndex: 0,
-    fadeAnim: new Animated.Value(0)
-  }
+    componentDidMount() {
+      this._AnimatedStart(1, 1000);
+      console.log('mount')
+      this.makeRemoteRequest();
+    }
 
-  componentDidMount() {
-    this._AnimatedStart(1, 1000);
-  }
+    _setFocusFood(category, id){
+      this.props.navigation.navigate('FoodChart', { 'foodId': id, 'category': category  })
+    }
 
-  _AnimatedStart(value, duration){
-    Animated.timing(
-      this.state.fadeAnim,
-      {
-        toValue: value,
-        duration: duration
+    makeRemoteRequest = () => {
+      // const url = `https://randomuser.me/api/?seed=${seed}&page=${page}&results=20`;
+      this.setState({ loading: true });
+      var measure = null;
+      var id = null;
+      var isFirstPage = false;
+      if( this.state.selectedIndex == 0 ){
+        const { page, seed, lastKnownVal } = this.state.vegetable;
+        if(lastKnownVal){
+          measure = lastKnownVal.measure;
+          id = lastKnownVal.id;
+        }else{
+          isFirstPage = true;
+        }
+        apis.getRankInVegetableByPageing( measure, id, isFirstPage )
+          .then(({vegetable, lastKnownVal}) => {
+            this.setState({
+              vegetable: {
+                lastKnownVal: lastKnownVal,
+                data: page === 1 ? vegetable : [...this.state.vegetable.data, ...vegetable],
+              }
+            });
+          })
       }
-    ).start();
-  }
+      if( this.state.selectedIndex == 1 || this.state.fish.data.length == 0 ){
+        const { page, seed, lastKnownVal } = this.state.fish;
+        if(lastKnownVal){
+          measure = lastKnownVal.measure;
+          id = lastKnownVal.id;
+        }else{
+          isFirstPage = true;
+        }
+        apis.getRankInFishByPageing( measure, id, isFirstPage )
+          .then(({fish, lastKnownVal}) => {
+            this.setState({
+              fish: {
+                lastKnownVal: lastKnownVal,
+                data: page === 1 ? fish : [...this.state.fish.data, ...fish],
+              }
+            });
+          })
+      }
 
-  _setFocusFood(category, id){
-    this.props.navigation.navigate('FoodChart', { 'foodId': id, 'category': category  })
-  }
+    };
 
-  // 蔬菜果花卉排行榜
-  renderVegetRankList(){
-      return this.props.results_vegetable.map(rank =>{
-          var id= rank.id;
-          var uri = `http://fs-old.mis.kuas.edu.tw/~s1103137212/ingredient/${id}.jpg`;
-          return(
-            <TouchableOpacity
-              key={rank.id}
-              onPress={() => this._setFocusFood('vegetable', rank.id)} >
-              <RankCard id={id} imageUrl={uri} ></RankCard>
-            </TouchableOpacity>
-          );
-      });
-  }
+    handleRefresh = () => {
+      this.setState(
+        {
+          page: 1,
+          seed: this.state.fish.seed + 1,
+          refreshing: true
+        },
+        () => {
+          this.makeRemoteRequest();
+        }
+      );
+    };
 
-  // 漁貨排行榜
-  renderFishRankList(){
-      return this.props.results_fish.map(rank =>{
-          var id= rank.id;
-          var uri = `http://fs-old.mis.kuas.edu.tw/~s1103137212/ingredient/${id}.jpg`;
-          return(
-            <TouchableOpacity
-              key={id}
-              onPress={() => this._setFocusFood('fish', rank.id)} >
-              <RankCard id={id} imageUrl={uri} ></RankCard>
-            </TouchableOpacity>
-          );
-      });
-  }
+    handleLoadMore = () => {
+      this.setState(
+        {
+          page: this.state.fish.page + 1
+        },
+        () => {
+          this.makeRemoteRequest();
+        }
+      );
+    };
+
+    renderSeparator = () => {
+      return (
+        <View
+          style={{
+            height: 1,
+            width: "86%",
+            // backgroundColor: "#CED0CE",
+            marginLeft: "14%"
+          }}
+        />
+      );
+    };
+
+    renderHeader = () => {
+      return <SearchBar placeholder="Type Here..." lightTheme round />;
+    };
+
+    renderFooter = () => {
+      if (!this.state.loading) return null;
+
+      return (
+        <View
+          style={{
+            paddingVertical: 0,
+            borderTopWidth: 1,
+            // borderColor: "#CED0CE"
+          }}
+        >
+          <ActivityIndicator animating size="large" />
+        </View>
+      );
+    };
 
 
-  scrollView(selectedIndex, buttons){
+    _AnimatedStart(value, duration){
+      Animated.timing(
+        this.state.fadeAnim,
+        {
+          toValue: value,
+          duration: duration
+        }
+      ).start();
+    }
+
+    updateIndex (selectedIndex) {
+      this._AnimatedStart(0, 0);
+      this._AnimatedStart(1, 500);
+      this.setState({selectedIndex})
+    }
+
+    scrollView(selectedIndex, buttons){
       var updateIndex = this.updateIndex.bind(this);
       let { fadeAnim } = this.state;
-
-      var BContent = <Button onPress={() => this.setState({isOpen: false})} style={[styles.btn, styles.btnModal]}>X</Button>;
       switch(selectedIndex){
         case 0:
           return (
+
             <View style={styles.wrapper}>
-              <ButtonGroup
-                onPress={updateIndex}
-                selectedIndex={selectedIndex}
-                selectedBackgroundColor='#1abc9c'
-                buttons={buttons}
-                containerStyle={{height: 40}} />
-              <ScrollView >
-                <Animated.View style={{opacity: fadeAnim}}>
-                  {this.renderVegetRankList()}
-                </Animated.View>
-              </ScrollView>
+                  <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
+                    <ButtonGroup
+                      onPress={updateIndex}
+                      selectedIndex={selectedIndex}
+                      selectedBackgroundColor='#1abc9c'
+                      buttons={buttons}
+                      containerStyle={{height: 40}} />
+                    <FlatList
+                      data={this.state.vegetable.data}
+                      renderItem={({ item }) => (
+                        <TouchableOpacity
+                          // key={item.id+'touch'}
+                          onPress={() => this._setFocusFood('vegetable', item.id)} >
+                          <RankCard
+                            id={item.id}
+                            imageUrl={`http://fs-old.mis.kuas.edu.tw/~s1103137212/ingredient/${item.id}.jpg`}
+                          ></RankCard>
+                        </TouchableOpacity>
+                      )}
+                      keyExtractor={item => item.id}
+                      ItemSeparatorComponent={this.renderSeparator}
+                      // onRefresh={this.handleRefresh}
+                      // refreshing={this.state.refreshing}
+                      onEndReached={this.handleLoadMore}
+                      onEndReachedThreshold={1}
+                    />
+                  </List>
             </View>
           );
           break;
         case 1:
           return (
             <View style={styles.wrapper}>
-              <ButtonGroup
-                onPress={updateIndex}
-                selectedIndex={selectedIndex}
-                selectedBackgroundColor='#1abc9c'
-                buttons={buttons}
-                containerStyle={{height: 40}} />
-              <ScrollView >
-                <Animated.View style={{opacity: fadeAnim}}>
-                  {this.renderFishRankList()}
-                </Animated.View>
-              </ScrollView>
+                  <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
+                    <ButtonGroup
+                      onPress={updateIndex}
+                      selectedIndex={selectedIndex}
+                      selectedBackgroundColor='#1abc9c'
+                      buttons={buttons}
+                      containerStyle={{height: 40}} />
+                      <Animated.View style={{opacity: fadeAnim}}>
+                        <FlatList
+                          data={this.state.fish.data}
+                          renderItem={({ item }) => (
+                            <TouchableOpacity
+                              // key={item.id+'touch'}
+                              onPress={() => this._setFocusFood('fish', item.id)} >
+                              <RankCard
+                                id={item.id}
+                                imageUrl={`http://fs-old.mis.kuas.edu.tw/~s1103137212/ingredient/${item.id}.jpg`}
+                              ></RankCard>
+                            </TouchableOpacity>
+                          )}
+                          keyExtractor={item => item.id}
+                          ItemSeparatorComponent={this.renderSeparator}
+                          // onRefresh={this.handleRefresh}
+                          // refreshing={this.state.refreshing}
+                          onEndReached={this.handleLoadMore}
+                          onEndReachedThreshold={1}
+                        />
+                      </Animated.View>
+                  </List>
             </View>
           );
           break;
-        default:
       }
+
     }
 
-  updateIndex (selectedIndex) {
-    this._AnimatedStart(0, 0);
-    this._AnimatedStart(1, 500);
-    this.setState({selectedIndex})
-  }
+    render() {
+      const component1 = () => <Text>蔬果</Text>
+      const component2 = () => <Text>漁貨</Text>
+      const buttons = [{ element: component1 }, { element: component2 }];
+      const { selectedIndex } = this.state;
 
-  render() {
-    const component1 = () => <Text>蔬果</Text>
-    const component2 = () => <Text>漁貨</Text>
-    const buttons = [{ element: component1 }, { element: component2 }];
-    const { selectedIndex } = this.state;
-
-    if(this.props.isLoad){
-      switch (selectedIndex) {
-        case 0:
-          return(
-            this.scrollView(selectedIndex ,buttons)
-          );
-          break;
-        case 1:
-          return(
-            this.scrollView(selectedIndex ,buttons)
-          );
-          break;
-        default:
+      if(this.props.isLoad){
+        return(
+          this.scrollView(selectedIndex ,buttons)
+        );
+      }else{
+        return (
+            <Image source={require('../assets/gif/loading04.gif')} style={styles.loading} />
+        );
       }
-    }else{
-      return (
-          <Image source={require('../assets/gif/loading04.gif')} style={styles.loading} />
-      );
     }
-  }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 15,
+    marginTop: -15,
     backgroundColor: '#fff',
   },
+  wrapper: {
+    width: screen.width,
+    paddingTop: 0,
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  loading: {
+    resizeMode:'contain'
+  },
+  txt: {
+      textAlign: 'center',
+      textAlignVertical: 'center',
+      fontSize: 30,
+    }
 });
 
 
@@ -184,7 +313,9 @@ function mapStateToProps({ rank }){
   return {
     results_vegetable: rank.results_vegetable,
     results_fish: rank.results_fish,
-    isLoad: rank.isLoad,
+    lastKnownVegetableValue: rank.lastKnownVegetableValue,
+    lastKnownFishValue: rank.lastKnownFishValue,
+    isLoad: true,
     isLogin: rank.isLogin
   };
 }

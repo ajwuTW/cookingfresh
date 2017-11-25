@@ -4,7 +4,9 @@ export const FACEBOOK_LOGOUT_SUCCESS = 'facebook_logout_success';
 
 
 export const RANK_FISH_FETCH_SUCCESS = 'rank_fish_fetch_success';
+export const RANK_FISH_FETCH_NEXT_SUCCESS = 'rank_fish_fetch_next_success';
 export const RANK_VEGETABLE_FETCH_SUCCESS = 'rank_vegetable_fetch_success';
+export const RANK_VEGETABLE_FETCH_NEXT_SUCCESS = 'rank_vegetable_fetch_next_success';
 export const DATA_LOGIN_STATE = 'data_login_state';
 
 

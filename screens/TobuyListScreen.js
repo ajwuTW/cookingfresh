@@ -42,7 +42,7 @@ class TobuyListScreen extends React.Component {
       headerTintColor: "#2c3e50",
       headerStyle: {
          backgroundColor:"#f1c40f"
-      },
+      }
     };
   };
 

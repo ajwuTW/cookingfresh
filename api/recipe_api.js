@@ -2,10 +2,10 @@ const URL = "http://fs.mis.kuas.edu.tw/~s1103137212/topic_project/";
 
 export const getFoodByFoodId = (id) => {
   return fetch(URL+'recipe_1.php?id='+id, {
-  method: "GET",
-  headers: {
-    "Content-Type": "application/json"
-  }})
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }})
         .then(function(response){
           console.log(response);
           return response.json();
