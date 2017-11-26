@@ -48,10 +48,10 @@ class HomeScreen extends React.Component {
     this.props.checkAuthState();
     // this.props.loadRank_vegetable();
     // this.props.loadRank_fish();
-    if(token){
-      this.props.fbLogin();
-      this.setState({ showWelcom: true });
-    }
+    // if(token){
+    //   this.props.fbLogin();
+    //   this.setState({ showWelcom: true });
+    // }
   }
 
   render() {

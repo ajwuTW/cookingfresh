@@ -16,6 +16,8 @@ import { Badge, Button, Card, ListItem, List } from 'react-native-elements';
 import * as actions from '../../actions';
 import * as apis from '../../api';
 
+import { CardSection } from '../../components/common';
+
 var screen = Dimensions.get('window');
 
 class RecipeDetailScreen extends React.Component {
@@ -36,7 +38,8 @@ class RecipeDetailScreen extends React.Component {
     // console.log("params4");
     // console.log(this.props.navigation.state.params);
     const { recipeId } = this.props.navigation.state.params;
-    this.props.setFocusRecipeId({'id': recipeId});
+    console.log(recipeId);
+    this.props.setFocusRecipeId(recipeId, this.props.isLogin, this.props.uid);
   }
 
   _onCarPressButton(){
@@ -109,10 +112,9 @@ class RecipeDetailScreen extends React.Component {
     if(this.props.isLoad){
       const resizeMode = 'center';
       if(this.props.isLogin){
-        console.log(this.props.description);
         return (
           <View style={styles.wrapper}>
-            <ScrollView style={{marginBottom: 100 }}>
+            <ScrollView style={{marginBottom: 0 }}>
               <View style={{ marginTop: 10, width: screen.width}}>
                 <Card
                   image={{uri: this.props.description.RecipePicture}}
@@ -145,7 +147,7 @@ class RecipeDetailScreen extends React.Component {
       }else{
         return (
           <View style={styles.wrapper}>
-            <ScrollView style={{marginBottom: 100 }}>
+            <ScrollView >
               <View style={{ marginTop: 10, width: screen.width}}>
                 <Card
                   image={{uri: this.props.description.RecipePicture}}
@@ -215,9 +217,7 @@ const styles = StyleSheet.create({
 });
 
 
-function mapStateToProps({ recipeDetail }){
-  console.log('recipeDetail');
-    console.log(recipeDetail);
+function mapStateToProps({ recipeDetail, auth }){
   return {
     recipeid: recipeDetail.recipeid,
     description: recipeDetail.description,
@@ -225,8 +225,9 @@ function mapStateToProps({ recipeDetail }){
     exception: recipeDetail.exception,
     step: recipeDetail.step,
     isLoad: recipeDetail.isLoad,
-    isLogin: recipeDetail.isLogin,
-    isExists: recipeDetail.isExists
+    isExists: recipeDetail.isExists,
+    isLogin: auth.isLogin,
+    uid: auth.firebase.uid
    };
 }
 

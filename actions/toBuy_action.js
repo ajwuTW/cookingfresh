@@ -2,9 +2,9 @@ import _ from 'lodash';
 import firebase from 'firebase';
 import axios from 'axios';
 import {
+  TO_BUY_LIST_INIT,
   TO_BUY_LIST_FETCH_SUCCESS,
   TO_BUY_LIST_FETCH_EMPTY,
-  TO_BUY_LIST_NOT_LOGIN,
   TO_BUY_LIST_FOOD_CHECKED_SUCCESS,
   TO_BUY_LIST_EXCEPTION_CHECKED_SUCCESS,
   TO_BUY_LIST_RECIPE_PLUS_SUCCESS,
@@ -12,36 +12,32 @@ import {
   TO_BUY_LIST_RECIPE_REMOVE_SUCCESS
 } from './types';
 
-export const getToBuyList = () => {
+export const initToBuyList = () => {
   return (dispatch) => {
-    firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        firebase.database().ref(`/users/${user.uid}/toBuy`)
-            .on('value', function(snapshot) {
-              if( snapshot.val() === null ){
-                dispatch({
-                  type: TO_BUY_LIST_FETCH_EMPTY,
-                  payload: { isLogin: true }
-                })
-              }else{
-                var { food, list, exception } = snapshot.val();
-                dispatch({
-                  type: TO_BUY_LIST_FETCH_SUCCESS,
-                  payload: {
-                    food, list, exception,
-                    isLogin: true
-                  }
-                })
-              }
+    dispatch({
+      type: TO_BUY_LIST_INIT
+    })
+  };
+};
 
-            });
-      } else {
-        dispatch({
-          type: TO_BUY_LIST_NOT_LOGIN,
-          payload: { isLogin: false}
-        })
-      }
-    });
+export const getToBuyList = (isLogin, uid) => {
+  return (dispatch) => {
+    if(isLogin){
+      firebase.database().ref(`/users/${uid}/toBuy`)
+          .on('value', function(snapshot) {
+            if( snapshot.val() === null ){
+              dispatch({ type: TO_BUY_LIST_FETCH_EMPTY })
+            }else{
+              var { food, list, exception } = snapshot.val();
+              dispatch({
+                type: TO_BUY_LIST_FETCH_SUCCESS,
+                payload: {
+                  food, list, exception
+                }
+              })
+            }
+          });
+    }
   };
 };
 

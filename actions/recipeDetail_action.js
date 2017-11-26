@@ -13,30 +13,20 @@ import {
 } from './types';
 import * as api from '../api';
 
-export const setFocusRecipeId = (id) => {
+export const setFocusRecipeId = (id, isLogin, uid) => {
   return (dispatch) => {
-    firebase.auth().onAuthStateChanged(function(user) {
-      dispatch({
-        type: RECIPE_ID_FETCH_ING
-      })
-      if (user) {
-        var isLogin = true;
+      dispatch({ type: RECIPE_ID_FETCH_ING });
+      if (isLogin) {
+        // var isLogin = true;
         //確認此 RecipeID 是否已在 tobulist
-        firebase.database().ref(`/users/${user.uid}/toBuy/list/${id.id}`)
+        firebase.database().ref(`/users/${uid}/toBuy/list/${id}`)
             .on('value', function(snapshot) {
-              if( snapshot.val() === null ){
-                dispatch({
-                  type: RECIPE_ID_IS_NOT_EXISTS
-                })
+              if( snapshot.exists() ){
+                dispatch({ type: RECIPE_ID_IS_EXISTS });
               }else{
-                dispatch({
-                  type: RECIPE_ID_IS_EXISTS
-                })
+                dispatch({ type: RECIPE_ID_IS_NOT_EXISTS });
               }
-
             });
-      }else{
-        var isLogin = false;
       }
       // Food
       api.getRecipeDetailByRecipeId(id)
@@ -47,13 +37,12 @@ export const setFocusRecipeId = (id) => {
           var step = recipeDetail.step;
           dispatch({
             type: RECIPE_ID_FETCH_SUCCESS,
-            payload: { id, description, food, exception, step, isLogin }
+            payload: { id, description, food, exception, step }
           })
         }).catch((error)=>{
            console.log("Api call error");
            alert(error.message);
         })
-    });
 
 
   };

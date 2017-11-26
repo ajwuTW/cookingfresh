@@ -58,18 +58,16 @@ class SettingsScreen extends React.Component {
 
   _fbLogin(){
     this.props.fbLogin();
-    this.props.getToBuyList();
   }
   _fbLogout(){
     this.props.fbLogout();
-    this.props.getToBuyList();
   }
 
   render() {
-    const { token, profile } = this.props;
+    const { firebase, profile, isLogin } = this.props;
     let { fadeAnim } = this.state;
 
-    if( token == null ){
+    if( !isLogin ){
       //default
       this._AnimatedStart(1, 1000);
       return(
@@ -91,7 +89,7 @@ class SettingsScreen extends React.Component {
     }else{
       // isLogin
       this._AnimatedStart(1, 1000);
-      var uri = 'https://graph.facebook.com/'+profile.id+'/picture?type=normal';
+      var uri = 'https://graph.facebook.com/'+profile.uid+'/picture?type=normal';
       return(
 
           <View style={styles.wrapper}>
@@ -105,7 +103,7 @@ class SettingsScreen extends React.Component {
                       resizeMode="cover"
                       source={{ uri: uri }}
                     />
-                    <Text style={styles.text_username}>{profile.name}</Text>
+                    <Text style={styles.text_username}>{profile.displayName}</Text>
                   </View>
                   <SocialIcon
                     title='登出'
@@ -155,8 +153,9 @@ const styles = StyleSheet.create({
 
 function mapStateToProps({ auth }){
   return {
-    token: auth.token,
+    firebase: auth.firebase,
     profile: auth.profile,
+    isLogin: auth.isLogin
   };
 }
 

@@ -64,7 +64,6 @@ class RankScreen extends React.Component {
 
     componentDidMount() {
       this._AnimatedStart(1, 1000);
-      console.log('mount')
       this.makeRemoteRequest();
     }
 

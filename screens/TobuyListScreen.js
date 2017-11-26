@@ -20,6 +20,9 @@ import * as apis from '../api';
 
 import Checkbox2  from '../components/Checkbox2';
 
+import TobuyFoodScreen  from './Tobuy/TobuyFoodScreen';
+import TobuyRecipeScreen  from './Tobuy/TobuyRecipeScreen';
+
 var screen = Dimensions.get('window');
 
 class TobuyListScreen extends React.Component {
@@ -27,15 +30,18 @@ class TobuyListScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state ={
-      fadeAnim: new Animated.Value(0)
+      'fadeAnim': new Animated.Value(0),
+      'page': '食材',
+      isLoad: false
     }
     this._switchToRecipeList = this._switchToRecipeList.bind(this);
+    this._switchToFoodList = this._switchToFoodList.bind(this);
   }
   static navigationOptions = ({navigation}) => {
     const { params = {} } = navigation.state;
     return {
-      title: `購物清單-食材`,
-      headerRight: <Badge value="食譜"
+      title: '購物清單-'+params.title,
+      headerRight: <Badge value={params.next}
                       containerStyle={{ marginRight: 10}}
                       onPress={() => params.handleSave()}
                    />,
@@ -47,101 +53,71 @@ class TobuyListScreen extends React.Component {
   };
 
   componentDidMount() {
-    this.props.navigation.setParams({ handleSave: this._switchToRecipeList });
+    this.props.navigation.setParams({
+      title: `食材`,
+      next: `食譜`,
+      handleSave: this._switchToRecipeList
+    });
   }
 
   componentWillMount(){
-    this.props.getToBuyList();
+    this.props.initToBuyList();
   }
 
   _switchToRecipeList(){
     if(this.props.isLogin){
-      this.props.navigation.navigate('TobuyRecipe');
+      this.props.navigation.setParams({
+        title: `食譜`,
+        next: `食材`,
+        handleSave: this._switchToFoodList
+      });
+      this.setState({'page': '食譜'});
     }else{
       alert("請先登入 Facebook");
     }
-
   }
 
-  _setFoodChecked(food, uid, checked){
-    if(checked){
-      this.props.setFoodChecked({uid, Checked: false});
-    }else{
-      this.props.setFoodChecked({uid, Checked: true});
-    }
-  }
-  _setExceptionChecked(exception, uid, checked){
-    if(checked){
-      this.props.setExceptionChecked({uid, Checked: false});
-    }else{
-      this.props.setExceptionChecked({uid, Checked: true});
-    }
+  _switchToFoodList(){
+    this.props.navigation.setParams({
+      title: `食材`,
+      next: `食譜`,
+      handleSave: this._switchToRecipeList
+    });
+    this.setState({'page': '食材'});
   }
 
-  // Page 1: Food
-  renderToBuyFoodCheckBoxList(){
-      return this.props.food.map(food =>{
-        var uid= food.uid;
-        var checked = food.Checked;
-        var sum = food.IngredientQty*food.count;
-        var unit = food.IngredientUnit;
-        var content = [
-          {id: 'name',text: uid},
-          {id: 'sumUnit',text: sum+' '+unit}
-        ];
-        return(
-          <TouchableOpacity
-            key={uid}
-            onPress={()=>this._setFoodChecked(food, uid, checked )}>
-            <Checkbox2
-              isChecked={checked}
-              content={content}
-            />
-          </TouchableOpacity>
-        );
-      });
+  _AnimatedStart(value, duration){
+    Animated.timing(
+      this.state.fadeAnim,
+      {
+        toValue: value,
+        duration: duration
+      }
+    ).start();
   }
-  // Page 1: exception
-  renderToBuyExceptionCheckBoxList(){
-      return this.props.exception.map(exception =>{
-        var uid= exception.uid;
-        var checked = exception.Checked;
-        var unit = exception.IngredientUnit;
-        var content = [
-          {id: 'name',text: uid},
-          {id: 'unit',text: unit}
-        ];
-        return(
-          <TouchableOpacity
-            key={uid}
-            onPress={()=>this._setExceptionChecked(exception, uid, checked )}>
-            <Checkbox2
-              isChecked={checked}
-              content={content}
-            />
-          </TouchableOpacity>
-        );
-      });
-  }
+
   // Modal 1: Recipe
-  renderToBuyRecipeCheckBoxList(){
-      return this.props.list.map(list =>{
-        var uid= list.uid;
-        var count = list.count;
-        return(
-          <RecipeCheckBoxRow
-            key={uid}
-            uid={uid}
-            count={count}
-            onPlusPress={this._plusRecipeQty}
-            onMinusPress={this._minusRecipeQty}
-          ></RecipeCheckBoxRow>
-        );
-      });
+  renderToBuyScreen(){
+    if(this.state.page == '食材'){
+      console.log('食材');
+      return(
+        <TobuyFoodScreen></TobuyFoodScreen>
+      );
+    }else if(this.state.page == '食譜'){
+      console.log('食譜');
+      return(
+          <TobuyRecipeScreen></TobuyRecipeScreen>
+      );
+    }
   }
 
   render() {
     let { fadeAnim } = this.state;
+
+    if( !this.props.isLoad && this.props.isLogin){
+      const { isLogin, uid } = this.props;
+      this.props.getToBuyList(isLogin, uid);
+    }
     if(!this.props.isLogin){
       return (
         <View style={styles.wrapper}>
@@ -157,27 +133,23 @@ class TobuyListScreen extends React.Component {
           />
         </View>
       );
-    }
-    if(this.props.isLoad){
-      return(
-        <View style={styles.wrapper}>
-          <ScrollView
-            style={{ backgroundColor: 'white' }}
-          >
-              {this.renderToBuyFoodCheckBoxList()}
-              {this.renderToBuyExceptionCheckBoxList()}
-          </ScrollView>
-        </View>
-      );
     }else{
-      return (
-          <ScrollView
-            style={{ backgroundColor: 'white' }}
-          >
-            <Image source={require('../assets/gif/loading04.gif')} style={styles.loading} />
-          </ScrollView>
-      );
+      if(this.props.isLoad){
+        return(
+            this.renderToBuyScreen()
+        );
+      }else{
+        return (
+            <ScrollView
+              style={{ backgroundColor: 'white' }}
+            >
+              <Image source={require('../assets/gif/loading04.gif')} style={styles.loading} />
+            </ScrollView>
+        );
+      }
     }
+
+
   }
 }
 
@@ -197,7 +169,7 @@ const styles = StyleSheet.create({
 });
 
 
-function mapStateToProps({ toBuy }){
+function mapStateToProps({ toBuy, auth }){
   const food = _.map(toBuy.food,(val, uid) => {
     return { ...val, uid };
   });
@@ -208,13 +180,18 @@ function mapStateToProps({ toBuy }){
   const exception = _.map( toBuy.exception ,(val, uid) => {
     return { ...val, uid };
   });
-
+  var isLogin= false, uid='';
+  if( auth.isLogin ){
+    isLogin = true;
+    uid = auth.firebase.uid;
+  }
   return {
     food: food,
     list: list,
     exception: exception,
     isLoad: toBuy.isLoad,
-    isLogin: toBuy.isLogin
+    isLogin: isLogin,
+    uid: uid
    };
 }
 

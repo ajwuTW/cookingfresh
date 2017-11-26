@@ -278,7 +278,6 @@ const styles = StyleSheet.create({
 
 
 function mapStateToProps({ rank }){
-  console.log(rank.results_vegetable);
   return {
     results_vegetable: rank.results_vegetable,
     results_fish: rank.results_fish,

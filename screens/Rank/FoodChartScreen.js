@@ -68,7 +68,7 @@ class FoodChartScreen extends React.Component {
   render() {
     if(this.props.isLoad){
       return(
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container, {marginBottom: 20}}>
           <FoodChart/>
           <View style={{ marginTop: 30}}>
             <Card

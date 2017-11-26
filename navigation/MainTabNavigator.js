@@ -28,8 +28,7 @@ export default TabNavigator(
           case 'Home':
             iconName =
               Platform.OS === 'ios'
-                ? `ios-information-circle${focused ? '' : '-outline'}`
-                : 'md-information-circle';
+                ? `ios-home${focused ? '' : '-outline'}` : 'md-home';
             break;
           case 'TobuyList':
             iconName = Platform.OS === 'ios' ? `ios-cart${focused ? '' : '-outline'}` : 'md-cart';
@@ -45,6 +44,7 @@ export default TabNavigator(
               Platform.OS === 'ios' ? `ios-options${focused ? '' : '-outline'}` : 'md-options';
         }
         return (
+          // Ionic Framework: https://ionicframework.com/docs/ionicons/
           <Ionicons
             name={iconName}
             size={28}

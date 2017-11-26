@@ -22,47 +22,31 @@ export const loadRank_vegetable = (lastKnownVal) => {
       isFirstPage = true;
     }
 
-
-      console.log('lastKnownVal');
-        console.log(lastKnownVal);
-          console.log('-----------');
-  firebase.database().ref(`/rank/vegetable`)
-      .orderByChild('measure')
-      .startAt(measure)
-      .limitToFirst(10)
-      .once('value')
-      .then(function(snapshot) {
-        var vegetable = [];
-        var lastKnownVal = null;
-        var isStart = false;
-        snapshot.forEach(function(child) {
-          lastKnownVal = child.val();
-          if(isStart || isFirstPage ){
-            vegetable.push(lastKnownVal);
-          }
-
-          if( id == lastKnownVal.id ){
-            isStart = true;
-            console.log('start');
-          }
-
-          console.log(lastKnownVal) // NOW THE CHILDREN PRINT IN ORDER
+    firebase.database().ref(`/rank/vegetable`)
+        .orderByChild('measure')
+        .startAt(measure)
+        .limitToFirst(10)
+        .once('value')
+        .then(function(snapshot) {
+          var vegetable = [];
+          var lastKnownVal = null;
+          var isStart = false;
+          snapshot.forEach(function(child) {
+            lastKnownVal = child.val();
+            if(isStart || isFirstPage ){
+              vegetable.push(lastKnownVal);
+            }
+            if( id == lastKnownVal.id ){
+              isStart = true;
+            }
+          });
+          dispatch({
+            type: RANK_VEGETABLE_FETCH_SUCCESS,
+            payload: {
+              vegetable, lastKnownVal
+            }
+          })
         });
-
-        // var lastKnownVal = null;
-        // var vegetable = Object.keys(snapshot.val()).map(function(e) {
-        //   console.log(snapshot.val()[e]);
-        //   lastKnownVal = snapshot.val()[e];
-        //   return lastKnownVal
-        // });
-        // console.log(vegetable);
-        dispatch({
-          type: RANK_VEGETABLE_FETCH_SUCCESS,
-          payload: {
-            vegetable, lastKnownVal
-          }
-        })
-      });
   };
 };
 

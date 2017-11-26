@@ -1,4 +1,5 @@
 export const FACEBOOK_LOGIN_SUCCESS = 'facebook_login_success';
+export const FACEBOOK_LOGIN_NONE = 'facebook_login_none';
 export const FACEBOOK_LOGIN_FAIL = 'facebook_login_fail';
 export const FACEBOOK_LOGOUT_SUCCESS = 'facebook_logout_success';
 
@@ -22,6 +23,8 @@ export const RECIPE_TO_STATUS_RESET = 'recipe_to_car_status_reset';
 export const RECIPE_ID_IS_EXISTS = 'recipe_id_is_exists';
 export const RECIPE_ID_IS_NOT_EXISTS = 'recipe_id_is_not_exists';
 
+
+export const TO_BUY_LIST_INIT = 'to_buy_list_init';
 export const TO_BUY_LIST_FETCH_SUCCESS = 'to_buy_list_fetch_success';
 export const TO_BUY_LIST_FETCH_EMPTY = 'to_buy_list_fetch_empty';
 

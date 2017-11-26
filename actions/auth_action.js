@@ -4,9 +4,11 @@ import firebase from 'firebase';
 
 import {
   FACEBOOK_LOGIN_SUCCESS,
+  FACEBOOK_LOGIN_NONE,
   FACEBOOK_LOGIN_FAIL,
   FACEBOOK_LOGOUT_SUCCESS
 } from './types';
+
 
 // How to use AsyncStorage:
 // AsyncStorage.setItem('fb_token', token);
@@ -15,15 +17,19 @@ import {
   export const fbLogin = () => async dispatch => {
     let token = await AsyncStorage.getItem('fb_token');
     if (token) {
-      //Dispatch an action saying FB login is done
-      const response = await fetch(
-          `https://graph.facebook.com/me?access_token=${token}`);
-      var profile = await response.json();
-      dispatch({ type: FACEBOOK_LOGIN_SUCCESS, payload: {token, profile} });
+      checkTokenProfile();
     } else {
       //start Facebook Login process
       doFbLogin(dispatch);
     }
+  }
+
+  export const fbLogout = () => async dispatch => {
+    firebase.auth().signOut().then(function() {
+        return dispatch({ type: FACEBOOK_LOGOUT_SUCCESS });
+    }, function(error) {
+      console.log('Signout ERROR')
+    });
   }
 
   const doFbLogin = async dispatch => {
@@ -34,12 +40,8 @@ import {
     if (type === 'cancel') {
         return dispatch({ type: FACEBOOK_LOGIN_FAIL });
     }
-    const response = await fetch(
-        `https://graph.facebook.com/me?access_token=${token}`);
-    var profile = await response.json();
     authenticate_fb(token);
-    await AsyncStorage.setItem('fb_token', token);
-    dispatch({ type: FACEBOOK_LOGIN_SUCCESS, payload: {token, profile} });
+    checkTokenProfile();
   }
 
   const authenticate_fb = (token) => {
@@ -49,23 +51,21 @@ import {
     const { currentUser } = firebase.auth();
   }
 
-  export const checkTokenProfile = () => async dispatch => {
-    let token = await AsyncStorage.getItem('fb_token');
-    if (token) {
-      //Dispatch an action saying FB login is done
-      const response = await fetch(
-          `https://graph.facebook.com/me?access_token=${token}`);
-      var profile = await response.json();
-      dispatch({ type: FACEBOOK_LOGIN_SUCCESS, payload: {token, profile} });
-    }
-    dispatch({ type: FACEBOOK_LOGIN_FAIL });
-  }
-
-  export const fbLogout = () => async dispatch => {
-    firebase.auth().signOut().then(function() {
-      AsyncStorage.removeItem('fb_token');
-    }, function(error) {
-      console.log('Signout ERROR')
+  export const checkTokenProfile = () => dispatch => {
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        const { uid, providerData } = user;
+        dispatch({
+          type: FACEBOOK_LOGIN_SUCCESS,
+          payload: {
+            firebase: {
+              uid: uid
+            },
+            profile: providerData[0]
+          }
+        });
+      }else{
+        dispatch({ type: FACEBOOK_LOGIN_NONE });
+      }
     });
-    dispatch({ type: FACEBOOK_LOGOUT_SUCCESS });
   }

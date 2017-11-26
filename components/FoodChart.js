@@ -105,7 +105,6 @@ class FoodChart extends Component {
               series: [{
                   name: '當日價格',
                   data: (function () {
-                      console.log(chartData);
                       return chartData;
                   }())
               }]

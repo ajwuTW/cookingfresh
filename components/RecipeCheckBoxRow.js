@@ -125,7 +125,7 @@ const styles = {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginLeft: 10,
+    marginLeft: 0,
     padding:2
   },
   recipePlusMinus: {

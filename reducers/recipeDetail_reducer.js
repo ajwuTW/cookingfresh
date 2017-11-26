@@ -11,7 +11,6 @@ import {
 
 const INITIAL_STATE ={
   isLoad: false,
-  isLogin: false,
   isSetToCar: false,
   isExists: true,
   recipeid: '',
@@ -31,13 +30,12 @@ export default function (state = INITIAL_STATE , action) {
                          description: action.payload.description,
                          exception: action.payload.exception,
                          step: action.payload.step,
-                         isLoad: true,
                          isLogin: action.payload.isLogin,
                        };
     case RECIPE_LIST_STATUS_RESET:
       return { ...state, isLoad: false };
     case RECIPE_TO_CAR_SUCCESS:
-      return { ...state, isSetToCar: true };
+      return { ...state, isSetToCar: true, isExists: true };
     case RECIPE_TO_STATUS_RESET:
       return { ...state, isSetToCar: false };
     case RECIPE_ID_IS_NOT_EXISTS:

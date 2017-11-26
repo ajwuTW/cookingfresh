@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet, Alert } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import _ from 'lodash';
 
@@ -29,6 +29,7 @@ class TobuyRecipeScreen extends React.Component {
   componentWillMount(){
     // console.log("params4");
     // console.log(this.props.navigation.state.params);
+    console.log('mount');
   }
 
   _plusRecipeQty(recipeId, description, food, exception){
@@ -36,8 +37,6 @@ class TobuyRecipeScreen extends React.Component {
   }
   _minusRecipeQty(recipeId, count, description, food, exception){
     if(count==1){
-      console.log("Qty==1")
-      console.log(description);
       const { RecipeName } = description;
       Alert.alert(
         '是否刪除',
@@ -82,13 +81,13 @@ class TobuyRecipeScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 15,
+    paddingTop: 0,
     backgroundColor: '#fff',
   },
 });
 
 
-function mapStateToProps({ toBuy }){
+function mapStateToProps({ toBuy, auth }){
 
   const list = _.map( toBuy.list ,(val, uid) => {
     return { ...val, uid };
@@ -96,7 +95,7 @@ function mapStateToProps({ toBuy }){
   return {
     list: list,
     isLoad: toBuy.isLoad,
-    isLogin: toBuy.isLogin
+    isLogin: auth.isLogin
    };
 }
 
