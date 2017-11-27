@@ -11,6 +11,7 @@ export const RANK_VEGETABLE_FETCH_NEXT_SUCCESS = 'rank_vegetable_fetch_next_succ
 export const DATA_LOGIN_STATE = 'data_login_state';
 
 
+export const FOOD_ID_FETCHING = 'food_id_fetching';
 export const FOOD_ID_FETCH_SUCCESS_CHART = 'food_id_fetch_success_chart';
 export const FOOD_ID_FETCH_SUCCESS_RECIPE = 'food_id_fetch_success_recipe';
 

@@ -20,6 +20,10 @@ class RankCard extends Component {
   }
   componentWillMount(){
     var id = this.props.id;
+    this.setState({
+      IngredientName: '',
+      IngredientOriginName: ''
+    });
     AsyncStorage.getItem('food-'+id)
       .then((item) => {
            if (item) {
@@ -46,14 +50,14 @@ class RankCard extends Component {
     var id = this.props.id;
     var imageUrl= this.props.imageUrl;
     if(this.state.isLoad){
-      var description = this.state.description
+      const{ IngredientName, IngredientOriginName } = this.state.description;
       return (
         <Card
-          title={description.IngredientName}
+          title={IngredientName}
           imageProps={{resizeMode: 'cover'}}
           image={{uri: imageUrl}} >
           <View style={styles.detailWrapper}>
-            <Text style={styles.italics}>{description.IngredientOriginName}</Text>
+            <Text style={styles.italics}>{IngredientOriginName}</Text>
           </View>
         </Card>
       );

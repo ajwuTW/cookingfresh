@@ -115,7 +115,7 @@ class SearchScreen extends React.Component {
   makeRemoteRequest = () => {
     const { page, seed, sort, searchText, maxPageSize } = this.state;
     if(page>maxPageSize){
-      console.log('return');
+      console.log('return')
       return;
     }
     this.setState({ loading: true });
@@ -132,9 +132,9 @@ class SearchScreen extends React.Component {
         });
     }else if(this.state.sort == '食譜'){
       apis.getRecipeListByRecipeText(searchText, page, pageSize)
-        .then(({Info, Ingredient}) => {
+        .then(({Info, Recipe}) => {
           this.setState({
-            data: page === 1 ? Ingredient : [...this.state.data, ...Ingredient],
+            data: page === 1 ? Recipe : [...this.state.data, ...Recipe],
             loading: false,
             refreshing: false,
             maxPageSize: Info.TotalPage
@@ -182,7 +182,6 @@ class SearchScreen extends React.Component {
   };
 
   changeText = (text) => {
-    console.log(text);
     this._initlPageState();
     this.setState(
       {
@@ -237,7 +236,7 @@ class SearchScreen extends React.Component {
       return (
         <TouchableOpacity
           // key={item.id+'touch'}
-          onPress={() => this._setFocusFood('vegetable', item.IngredientId)} >
+          onPress={() => this._setFocusFood(item.IngredientKind, item.IngredientId)} >
           <RankCard
             id={item.IngredientId}
             imageUrl={`http://fs-old.mis.kuas.edu.tw/~s1103137212/ingredient/${item.IngredientId}.jpg`}

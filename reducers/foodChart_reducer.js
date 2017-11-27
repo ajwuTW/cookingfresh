@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {
+  FOOD_ID_FETCHING,
   FOOD_ID_FETCH_SUCCESS_CHART,
   FOOD_ID_FETCH_SUCCESS_RECIPE
 } from '../actions/types';
@@ -33,6 +34,9 @@ export default function (state = INITIAL_FOOD_STATE , action) {
       return { ...state, recipeList: action.payload.recipeList,
                         isLoad: true
                       };
+   case FOOD_ID_FETCHING:
+     console.log('3')
+     return { ...state, isLoad: false };
     default:
       return state;
   }

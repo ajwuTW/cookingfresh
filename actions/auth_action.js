@@ -47,8 +47,13 @@ import {
   const authenticate_fb = (token) => {
     const provider = firebase.auth.FacebookAuthProvider
     const credential = provider.credential(token)
-    firebase.auth().signInWithCredential(credential);
-    const { currentUser } = firebase.auth();
+    firebase.auth().signInWithCredential(credential)
+      .then((user) => {
+        firebase.database().ref(`/users/${user.uid}/toBuy/`)
+            .update({'laseLoginDate': new Date()});
+      }).catch((err) => {
+           console.error('User signin error', err);
+    });
   }
 
   export const checkTokenProfile = () => dispatch => {

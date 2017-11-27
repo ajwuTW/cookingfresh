@@ -244,7 +244,7 @@ class RankScreen extends React.Component {
                           renderItem={({ item }) => (
                             <TouchableOpacity
                               // key={item.id+'touch'}
-                              onPress={() => this._setFocusFood('fish', item.id)} >
+                              onPress={() => this._setFocusFood('seafood', item.id)} >
                               <RankCard
                                 id={item.id}
                                 imageUrl={`http://fs-old.mis.kuas.edu.tw/~s1103137212/ingredient/${item.id}.jpg`}

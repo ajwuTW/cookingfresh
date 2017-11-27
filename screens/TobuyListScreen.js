@@ -99,12 +99,10 @@ class TobuyListScreen extends React.Component {
   // Modal 1: Recipe
   renderToBuyScreen(){
     if(this.state.page == '食材'){
-      console.log('食材');
       return(
         <TobuyFoodScreen></TobuyFoodScreen>
       );
     }else if(this.state.page == '食譜'){
-      console.log('食譜');
       return(
           <TobuyRecipeScreen></TobuyRecipeScreen>
       );

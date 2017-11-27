@@ -29,6 +29,7 @@ class TobuyFoodScreen extends React.Component {
     this.state ={
       fadeAnim: new Animated.Value(0)
     }
+    this._multiply = this._multiply.bind(this);
   }
   static navigationOptions = ({navigation}) => {
     const { params = {} } = navigation.state;
@@ -41,12 +42,21 @@ class TobuyFoodScreen extends React.Component {
     };
   };
 
-  componentDidMount() {
-
-  }
-
   componentWillMount(){
     this.props.getToBuyList();
+  }
+
+  _multiply(x, y){
+    var cf = 10
+    return (x * cf) * (y * cf) / (cf * cf)
+  }
+
+  _setFoodChecked(food, uid, checked){
+    if(checked){
+      this.props.setFoodChecked({uid, Checked: false});
+    }else{
+      this.props.setFoodChecked({uid, Checked: true});
+    }
   }
 
   _setFoodChecked(food, uid, checked){
@@ -69,7 +79,7 @@ class TobuyFoodScreen extends React.Component {
       return this.props.food.map(food =>{
         var uid= food.uid;
         var checked = food.Checked;
-        var sum = food.IngredientQty*food.count;
+        var sum = this._multiply(food.IngredientQty, food.count);
         var unit = food.IngredientUnit;
         var content = [
           {id: 'name',text: uid},

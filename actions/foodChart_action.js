@@ -2,6 +2,7 @@ import _ from 'lodash';
 import firebase from 'firebase';
 import axios from 'axios';
 import {
+  FOOD_ID_FETCHING,
   FOOD_ID_FETCH_SUCCESS_CHART,
   FOOD_ID_FETCH_SUCCESS_RECIPE
 } from './types';
@@ -11,6 +12,7 @@ import * as api from '../api';
 export const setFocusFoodId = (category, id) => {
   const { currentUser } = firebase.auth();
   return async (dispatch) => {
+    dispatch({ type: FOOD_ID_FETCHING });
     var chartData = [];
     var chartDay = [];
     var chart = [];
@@ -18,10 +20,12 @@ export const setFocusFoodId = (category, id) => {
     var categoryPath = '';
     if(category == 'vegetable'){
       categoryPath = 'vegetable';
-    }else if(category == 'fish'){
+    }else if(category == 'seafood'){
       categoryPath = 'meet/fish';
     }else if(category == 'chicken'){
       categoryPath = 'meet/chicken';
+    }else if(category == 'egg'){
+      categoryPath = 'meet/pork';
     }else if(category == 'pork'){
       categoryPath = 'meet/pork';
     }
