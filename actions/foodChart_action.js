@@ -35,13 +35,9 @@ export const setFocusFoodId = (category, id) => {
     var dd = today.getDate();
     var mm = today.getMonth()+1; //January is 0!
     var yyyy = today.getFullYear();
-    if(dd<10) {
-        dd = '0'+dd
-    }
+    if(dd<10) { dd = '0'+dd; }
+    if(mm<10) { mm = '0'+mm; }
 
-    if(mm<10) {
-        mm = '0'+mm
-    }
     var currentToday = yyyy+''+mm+''+dd;
     firebase.database().ref(`/data/${categoryPath}/${id}`)
         .orderByKey()
@@ -50,34 +46,23 @@ export const setFocusFoodId = (category, id) => {
         .then(function(snapshot) {
           snapshot.forEach(function(childSnapshot) {
             var tmp = 1*childSnapshot.val();
-
             var date = childSnapshot.key;
-            console.log('del: '+(currentToday-date));
-
+            
             if((currentToday-date)<=10000){
-              console.log('now: '+date.substring(0,4));
-              console.log(date.substring(0,4)-46);
               var dot = [
-                  Date.UTC(date.substring(0,4)-46, date.substring(4,6)-1, date.substring(6,8)),
-                  // new Date(date.substring(0,4)+'-'+date.substring(4,6)+'-'+date.substring(6,8)).getTime(),
+                  Date.UTC(date.substring(0,4)-46, date.substring(4,6)-1, date.substring(6,8))
                   tmp
               ];
               chartData['first'].push(dot);
             }else if((currentToday-date)<=20000){
-              console.log('now: '+date.substring(0,4));
-              console.log(date.substring(0,4)-45);
               var dot = [
-                  Date.UTC(date.substring(0,4)-45, date.substring(4,6)-1, date.substring(6,8)),
-                  // new Date(date.substring(0,4)+'-'+date.substring(4,6)+'-'+date.substring(6,8)).getTime(),
+                  Date.UTC(date.substring(0,4)-45, date.substring(4,6)-1, date.substring(6,8))
                   tmp
               ];
               chartData['second'].push(dot);
             }else if((currentToday-date)<=30000){
-              console.log('now: '+date.substring(0,4));
-              console.log(date.substring(0,4)-44);
               var dot = [
-                  Date.UTC(date.substring(0,4)-44, date.substring(4,6)-1, date.substring(6,8)),
-                  // new Date(date.substring(0,4)+'-'+date.substring(4,6)+'-'+date.substring(6,8)).getTime(),
+                  Date.UTC(date.substring(0,4)-44, date.substring(4,6)-1, date.substring(6,8))
                   tmp
               ];
               chartData['third'].push(dot);
@@ -85,7 +70,6 @@ export const setFocusFoodId = (category, id) => {
             count++;
           });
           // Chart
-          console.log(chartData['second']);
           dispatch({ type: FOOD_ID_FETCH_SUCCESS_CHART, payload: { id, chartData } })
 
           // Food
