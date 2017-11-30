@@ -12,8 +12,6 @@ export default class FoodChart extends Component {
 
     constructor(props) {
       super(props);
-      // console.log('props');
-      // console.log(props);
       this.state = {
         config: props.config,
         options: props.options,
@@ -25,8 +23,6 @@ export default class FoodChart extends Component {
       }
     }
     componentDidMount(){
-      // console.log('this.porps');
-      // console.log(this.state);
       this.setState({
         isLoad: true
       })

@@ -31,6 +31,7 @@ export const setFocusRecipeId = (id, isLogin, uid) => {
       // Food
       api.getRecipeDetailByRecipeId(id)
         .then(({recipeDetail}) => {
+          console.log(recipeDetail);
           var description = recipeDetail.description[0];
           var food = recipeDetail.ingredient;
           var exception = recipeDetail.exception;

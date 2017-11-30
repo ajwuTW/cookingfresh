@@ -12,21 +12,19 @@ const INITIAL_FOOD_STATE ={
     RecipePicture: '',
     RecipeName: '',
   }],
-  chart: [{"x":0,"y":50.4}, {"x":0,"y":50.4}],
   foodid: '',
-  chartDay: [
-    {value:'name1'},
-    {value:'name2'}],
-  chartData: []
+  chartData: {
+    first: [],
+    second: [],
+    third: []
+  }
 
 }
 
 export default function (state = INITIAL_FOOD_STATE , action) {
   switch( action.type ){
     case FOOD_ID_FETCH_SUCCESS_CHART:
-      return { ...state, chart: action.payload.chart,
-                         foodid: action.payload.id,
-                         chartDay: action.payload.chartDay,
+      return { ...state, foodid: action.payload.id,
                          chartData: action.payload.chartData,
                          isLoad: true
                        };
@@ -35,7 +33,6 @@ export default function (state = INITIAL_FOOD_STATE , action) {
                         isLoad: true
                       };
    case FOOD_ID_FETCHING:
-     console.log('3')
      return { ...state, isLoad: false };
     default:
       return state;

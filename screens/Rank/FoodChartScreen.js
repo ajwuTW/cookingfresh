@@ -43,7 +43,7 @@ class FoodChartScreen extends React.Component {
   }
 
   static navigationOptions = {
-    title: '食材波動',
+    title: '食材價格波動',
     headerTintColor: "#2c3e50",
     headerStyle: {
      backgroundColor:"#f1c40f"
@@ -98,46 +98,79 @@ class FoodChartScreen extends React.Component {
   _getConf = (chartData) => {
     var Highcharts='Highcharts';
     return {
+
       chart: {
-          type: 'spline',
-          animation: Highcharts.svg, // don't animate in old IE
-          marginRight: 10
+        type: 'scatter',
+        animation: Highcharts.svg, // don't animate in old IE
+        marginRight: 10
       },
       title: {
           text: this.state.description.IngredientOriginName
       },
+      subtitle: {
+          text: this.state.description.IngredientName
+      },
       xAxis: {
           type: 'datetime',
-          tickPixelInterval: 150
+          dateTimeLabelFormats: { // don't display the dummy year
+              month: '%e. %b',
+              year: '%b'
+          },
+          title: {
+              text: 'Date'
+          }
       },
       yAxis: {
           title: {
               text: '價格'
           },
-          plotLines: [{
-              value: 0,
-              width: 1,
-              color: '#808080'
-          }]
+        startOnTick: true,
+        endOnTick: true,
+        showLastLabel: true
       },
       tooltip: {
-          formatter: function () {
-              return '<b>' + this.series.name + '</b><br/>' +
-                  Highcharts.dateFormat('%Y-%m-%d', this.x) + '<br/>' +
-                  Highcharts.numberFormat(this.y, 2);
-          }
+          headerFormat: '<b>{series.name}</b><br>',
+          pointFormat: '{point.x:%e. %b}: {point.y:.2f} '
       },
-      legend: {
-          enabled: false
+
+      plotOptions: {
+        scatter: {
+            marker: {
+                radius: 5,
+                states: {
+                    hover: {
+                        enabled: true,
+                        lineColor: 'rgb(100,100,100)'
+                    }
+                }
+            },
+            states: {
+                hover: {
+                    marker: {
+                        enabled: false
+                    }
+                }
+            }
+        }
       },
       exporting: {
           enabled: false
       },
       series: [{
-          name: '當日價格',
-          data: (function () {
-              return chartData;
-          }())
+          name: '今年',
+          color: 'rgba(223, 83, 83, .5)',
+          // Define the data points. All series have a dummy year
+          // of 1970/71 in order to be compared on the same x axis. Note
+          // that in JavaScript, months start at 0 for January, 1 for February etc.
+          data: chartData['first']
+      }, {
+          name: '去年',
+          color: 'rgba(149, 165, 166, .3)',
+          data: chartData['second']
+      }, {
+          name: '前年',
+          color: 'rgba(223, 83, 83, .3)',
+          data: chartData['third']
       }]
     }
   }

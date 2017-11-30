@@ -72,11 +72,12 @@ class RankScreen extends React.Component {
     }
 
     makeRemoteRequest = () => {
-      // const url = `https://randomuser.me/api/?seed=${seed}&page=${page}&results=20`;
+
       this.setState({ loading: true });
       var measure = null;
       var id = null;
       var isFirstPage = false;
+      var pageSize = 10;
       if( this.state.selectedIndex == 0 ){
         const { page, seed, lastKnownVal } = this.state.vegetable;
         if(lastKnownVal){
@@ -85,7 +86,7 @@ class RankScreen extends React.Component {
         }else{
           isFirstPage = true;
         }
-        apis.getRankInVegetableByPageing( measure, id, isFirstPage )
+        apis.getRankInVegetableByPageing( measure, id, isFirstPage, pageSize )
           .then(({vegetable, lastKnownVal}) => {
             this.setState({
               vegetable: {
@@ -103,7 +104,7 @@ class RankScreen extends React.Component {
         }else{
           isFirstPage = true;
         }
-        apis.getRankInFishByPageing( measure, id, isFirstPage )
+        apis.getRankInFishByPageing( measure, id, isFirstPage, pageSize )
           .then(({fish, lastKnownVal}) => {
             this.setState({
               fish: {
@@ -129,10 +130,12 @@ class RankScreen extends React.Component {
       );
     };
 
-    handleLoadMore = () => {
+    handleLoadMore_vegetable = () => {
+      const { vegetable } = this.state;
+      vegetable.page = this.state.vegetable.page + 1
       this.setState(
         {
-          page: this.state.fish.page + 1
+          vegetable
         },
         () => {
           this.makeRemoteRequest();
@@ -140,6 +143,18 @@ class RankScreen extends React.Component {
       );
     };
 
+    handleLoadMore_fish = () => {
+      const { fish } = this.state;
+      fish.page = this.state.fish.page + 1
+      this.setState(
+        {
+          fish
+        },
+        () => {
+          this.makeRemoteRequest();
+        }
+      );
+    };
     renderSeparator = () => {
       return (
         <View
@@ -221,7 +236,7 @@ class RankScreen extends React.Component {
                       ItemSeparatorComponent={this.renderSeparator}
                       // onRefresh={this.handleRefresh}
                       // refreshing={this.state.refreshing}
-                      onEndReached={this.handleLoadMore}
+                      onEndReached={this.handleLoadMore_vegetable}
                       onEndReachedThreshold={1}
                     />
                   </List>
@@ -255,7 +270,7 @@ class RankScreen extends React.Component {
                           ItemSeparatorComponent={this.renderSeparator}
                           // onRefresh={this.handleRefresh}
                           // refreshing={this.state.refreshing}
-                          onEndReached={this.handleLoadMore}
+                          onEndReached={this.handleLoadMore_fish}
                           onEndReachedThreshold={1}
                         />
                       </Animated.View>
