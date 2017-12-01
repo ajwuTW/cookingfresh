@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Cookingfresh",
+    "name": "CookingFresh",
     "description": "煮鮮",
-    "slug": "Cookingfresh",
+    "slug": "CookingFresh",
     "privacy": "public",
     "sdkVersion": "23.0.0",
     "version": "1.0.0",
