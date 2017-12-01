@@ -32,10 +32,12 @@ export default class FoodChart extends Component {
       const { config, options } = this.props;
       if(this.state.isLoad){
         return (
-          <ChartView style={{height:300}}
-                     config={config}
-                     options={options}
-          ></ChartView>
+          <Card>
+            <ChartView style={{height:300}}
+                       config={config}
+                       options={options}
+            ></ChartView>
+          </Card>
         );
       }else{
         return (

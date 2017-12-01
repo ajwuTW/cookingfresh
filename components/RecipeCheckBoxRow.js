@@ -23,12 +23,11 @@ class RecipeCheckBoxRow extends Component {
   componentWillMount(){
     var id = this.props.uid;
     var count = this.props.count;
-    AsyncStorage.removeItem('recipe-'+id);
     AsyncStorage.getItem('recipe-'+id)
       .then((item) => {
            if (item) {
              var item = JSON.parse(item);
-             var description = item.description[0];
+             var description = item.description;
              var food = item.ingredient;
              var exception = item.exception;
              this.setState({
@@ -66,7 +65,7 @@ class RecipeCheckBoxRow extends Component {
         <View
           key={recipeId} style={styles.rowWrapper}>
           <View  style={styles.recipeText} >
-            <Text style={{padding:3}}>
+            <Text style={{padding:3, width:180}}>
               {RecipeName}
             </Text>
             <Text style={{padding:3}}>

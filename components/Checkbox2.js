@@ -13,8 +13,7 @@ export default class Checkbox2 extends Component {
       return this.props.content.map(content =>{
           var id= content.id;
           return(
-            <Text key={id}
-                  style={{padding:7, margin:3}}>
+            <Text key={id}>
               {content.text}
             </Text>
           );

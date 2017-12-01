@@ -14,6 +14,8 @@ export const DATA_LOGIN_STATE = 'data_login_state';
 export const FOOD_ID_FETCHING = 'food_id_fetching';
 export const FOOD_ID_FETCH_SUCCESS_CHART = 'food_id_fetch_success_chart';
 export const FOOD_ID_FETCH_SUCCESS_RECIPE = 'food_id_fetch_success_recipe';
+export const FOOD_CHART_SCREEN_INIT = 'food_chart_screen_init';
+
 
 export const RECIPE_ID_FETCH_ING = 'recipe_id_fetch_ing';
 export const RECIPE_ID_FETCH_SUCCESS = 'recipe_id_fetch_success';

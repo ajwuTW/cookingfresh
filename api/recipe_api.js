@@ -8,6 +8,7 @@ export const getFoodByFoodId = (id) => {
         "Content-Type": "application/json"
       }})
         .then(function(response){
+          console.log(response);
           return response.json();
         })
         .then(function(json){

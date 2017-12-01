@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Alert } from 'react-native';
+import { ScrollView, StyleSheet, Alert, View } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import _ from 'lodash';
 
@@ -58,20 +58,22 @@ class TobuyRecipeScreen extends React.Component {
         var uid= list.uid;
         var count = list.count;
         return(
-          <RecipeCheckBoxRow
-            key={uid}
-            uid={uid}
-            count={count}
-            onPlusPress={this._plusRecipeQty}
-            onMinusPress={this._minusRecipeQty}
-          ></RecipeCheckBoxRow>
+          <View key={uid}
+            style={{ backgroundColor: '#fff', padding:3, margin:3 }}>
+            <RecipeCheckBoxRow
+              uid={uid}
+              count={count}
+              onPlusPress={this._plusRecipeQty}
+              onMinusPress={this._minusRecipeQty}
+            ></RecipeCheckBoxRow>
+          </View>
         );
       });
   }
 
   render() {
     return (
-      <ScrollView style={styles.container}>
+      <ScrollView style={{ backgroundColor: 'rgba(233,233,239, 1)', paddingTop: 3 }}>
         {this.renderToBuyRecipeCheckBoxList()}
       </ScrollView>
     );
@@ -81,7 +83,7 @@ class TobuyRecipeScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 0,
+    paddingTop: 3,
     backgroundColor: '#fff',
   },
 });

@@ -29,7 +29,6 @@ var screen = Dimensions.get('window');
 class RankScreen extends React.Component {
     constructor(props) {
       super(props);
-
       this._setFocusFood = this._setFocusFood.bind(this);
       this.state = {
         loading: false,
@@ -37,11 +36,15 @@ class RankScreen extends React.Component {
           data: [],
           page: 1,
           lastKnownVal: null,
+          maxPageSize: 1,
+          pageSize: 20
         },
         fish: {
           data: [],
           page: 1,
           lastKnownVal: null,
+          maxPageSize: 1,
+          pageSize: 20
         },
         seed: 1,
         error: null,
@@ -62,6 +65,20 @@ class RankScreen extends React.Component {
       };
     };
 
+    componentWillMount() {
+      apis.getVegetablePageConfig()
+        .then(({pageTotal}) => {
+          const { vegetable } = this.state;
+          vegetable.maxPageSize = Math.ceil(pageTotal/vegetable.pageSize);
+          this.setState({ vegetable });
+        });
+      apis.getSeafoodPageConfig()
+        .then(({pageTotal}) => {
+          const { fish } = this.state;
+          fish.maxPageSize = Math.ceil(pageTotal/fish.pageSize);
+          this.setState({ fish });
+        });
+    }
     componentDidMount() {
       this._AnimatedStart(1, 1000);
       this.makeRemoteRequest();
@@ -72,45 +89,51 @@ class RankScreen extends React.Component {
     }
 
     makeRemoteRequest = () => {
-
       this.setState({ loading: true });
       var measure = null;
       var id = null;
       var isFirstPage = false;
-      var pageSize = 10;
       if( this.state.selectedIndex == 0 ){
-        const { page, seed, lastKnownVal } = this.state.vegetable;
+        const { page, seed, lastKnownVal, maxPageSize } = this.state.vegetable;
+        if(page>maxPageSize){
+          console.log('return')
+          return;
+        }
         if(lastKnownVal){
           measure = lastKnownVal.measure;
           id = lastKnownVal.id;
         }else{
           isFirstPage = true;
         }
-        apis.getRankInVegetableByPageing( measure, id, isFirstPage, pageSize )
-          .then(({vegetable, lastKnownVal}) => {
+        apis.getRankInVegetableByPageing( measure, id, isFirstPage )
+          .then(({vegetable_rank_data, lastKnownVal}) => {
+            const { vegetable } = this.state;
+            vegetable.lastKnownVal = lastKnownVal;
+            vegetable.data = page === 1 ? vegetable_rank_data : [...this.state.vegetable.data, ...vegetable_rank_data];
             this.setState({
-              vegetable: {
-                lastKnownVal: lastKnownVal,
-                data: page === 1 ? vegetable : [...this.state.vegetable.data, ...vegetable],
-              }
+              vegetable
             });
           })
       }
       if( this.state.selectedIndex == 1 || this.state.fish.data.length == 0 ){
-        const { page, seed, lastKnownVal } = this.state.fish;
+        const { page, seed, lastKnownVal, maxPageSize } = this.state.fish;
+        if(page>maxPageSize){
+          console.log('return')
+          return;
+        }
         if(lastKnownVal){
           measure = lastKnownVal.measure;
           id = lastKnownVal.id;
         }else{
           isFirstPage = true;
         }
-        apis.getRankInFishByPageing( measure, id, isFirstPage, pageSize )
-          .then(({fish, lastKnownVal}) => {
+        apis.getRankInSeafoodByPageing( measure, id, isFirstPage )
+          .then(({fish_rank_data, lastKnownVal}) => {
+            const { fish } = this.state;
+            fish.lastKnownVal = lastKnownVal;
+            fish.data = page === 1 ? fish_rank_data : [...this.state.fish.data, ...fish_rank_data];
             this.setState({
-              fish: {
-                lastKnownVal: lastKnownVal,
-                data: page === 1 ? fish : [...this.state.fish.data, ...fish],
-              }
+              fish
             });
           })
       }
@@ -134,9 +157,7 @@ class RankScreen extends React.Component {
       const { vegetable } = this.state;
       vegetable.page = this.state.vegetable.page + 1
       this.setState(
-        {
-          vegetable
-        },
+        { vegetable },
         () => {
           this.makeRemoteRequest();
         }
@@ -147,9 +168,7 @@ class RankScreen extends React.Component {
       const { fish } = this.state;
       fish.page = this.state.fish.page + 1
       this.setState(
-        {
-          fish
-        },
+        { fish },
         () => {
           this.makeRemoteRequest();
         }
@@ -208,23 +227,21 @@ class RankScreen extends React.Component {
     scrollView(selectedIndex, buttons){
       var updateIndex = this.updateIndex.bind(this);
       let { fadeAnim } = this.state;
-      switch(selectedIndex){
-        case 0:
-          return (
-
-            <View style={styles.wrapper}>
-                  <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
-                    <ButtonGroup
-                      onPress={updateIndex}
-                      selectedIndex={selectedIndex}
-                      selectedBackgroundColor='#1abc9c'
-                      buttons={buttons}
-                      containerStyle={{height: 40}} />
+      return (
+        <View style={styles.wrapper}>
+        <ButtonGroup
+          onPress={updateIndex}
+          selectedIndex={selectedIndex}
+          selectedBackgroundColor='#1abc9c'
+          buttons={buttons} />
+              <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0, marginTop: 0, backgroundColor: 'rgba(233, 233, 239, 1)' }}>
+                {
+                  selectedIndex == 0
+                  ? (
                     <FlatList
                       data={this.state.vegetable.data}
                       renderItem={({ item }) => (
                         <TouchableOpacity
-                          // key={item.id+'touch'}
                           onPress={() => this._setFocusFood('vegetable', item.id)} >
                           <RankCard
                             id={item.id}
@@ -239,47 +256,31 @@ class RankScreen extends React.Component {
                       onEndReached={this.handleLoadMore_vegetable}
                       onEndReachedThreshold={1}
                     />
-                  </List>
-            </View>
-          );
-          break;
-        case 1:
-          return (
-            <View style={styles.wrapper}>
-                  <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
-                    <ButtonGroup
-                      onPress={updateIndex}
-                      selectedIndex={selectedIndex}
-                      selectedBackgroundColor='#1abc9c'
-                      buttons={buttons}
-                      containerStyle={{height: 40}} />
-                      <Animated.View style={{opacity: fadeAnim}}>
-                        <FlatList
-                          data={this.state.fish.data}
-                          renderItem={({ item }) => (
-                            <TouchableOpacity
-                              // key={item.id+'touch'}
-                              onPress={() => this._setFocusFood('seafood', item.id)} >
-                              <RankCard
-                                id={item.id}
-                                imageUrl={`http://fs-old.mis.kuas.edu.tw/~s1103137212/ingredient/${item.id}.jpg`}
-                              ></RankCard>
-                            </TouchableOpacity>
-                          )}
-                          keyExtractor={item => item.id}
-                          ItemSeparatorComponent={this.renderSeparator}
-                          // onRefresh={this.handleRefresh}
-                          // refreshing={this.state.refreshing}
-                          onEndReached={this.handleLoadMore_fish}
-                          onEndReachedThreshold={1}
-                        />
-                      </Animated.View>
-                  </List>
-            </View>
-          );
-          break;
-      }
-
+                  ) :(
+                    <FlatList
+                      data={this.state.fish.data}
+                      renderItem={({ item }) => (
+                        <TouchableOpacity
+                          // key={item.id+'touch'}
+                          onPress={() => this._setFocusFood('seafood', item.id)} >
+                          <RankCard
+                            id={item.id}
+                            imageUrl={`http://fs-old.mis.kuas.edu.tw/~s1103137212/ingredient/${item.id}.jpg`}
+                          ></RankCard>
+                        </TouchableOpacity>
+                      )}
+                      keyExtractor={item => item.id}
+                      ItemSeparatorComponent={this.renderSeparator}
+                      // onRefresh={this.handleRefresh}
+                      // refreshing={this.state.refreshing}
+                      onEndReached={this.handleLoadMore_fish}
+                      onEndReachedThreshold={1}
+                    />
+                  )
+                }
+              </List>
+        </View>
+      );
     }
 
     render() {
@@ -287,7 +288,6 @@ class RankScreen extends React.Component {
       const component2 = () => <Text>漁貨</Text>
       const buttons = [{ element: component1 }, { element: component2 }];
       const { selectedIndex } = this.state;
-
       if(this.props.isLoad){
         return(
           this.scrollView(selectedIndex ,buttons)
@@ -302,15 +302,13 @@ class RankScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    marginTop: -15,
-    backgroundColor: '#fff',
+    flex: 1
   },
   wrapper: {
     width: screen.width,
     paddingTop: 0,
+    paddingBottom: 20,
     flex: 1,
-    backgroundColor: '#fff',
   },
   loading: {
     resizeMode:'contain'

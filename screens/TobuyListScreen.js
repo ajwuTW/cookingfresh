@@ -155,11 +155,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 15,
+    backgroundColor: 'rgba(233,233,239, 1)'
   },
   wrapper: {
     width: screen.width,
     paddingTop: 0,
     flex: 1,
+    backgroundColor: 'rgba(233,233,239, 1)'
   },
   loading: {
     resizeMode:'contain'

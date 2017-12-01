@@ -54,7 +54,7 @@ export const loadRank_fish = () => {
   const { currentUser } = firebase.auth();
   return (dispatch) => {
 
-  firebase.database().ref(`/rank/meet/fish`)
+  firebase.database().ref(`/rank/seafood`)
       .orderByChild('measure')
       .limitToFirst(10)
       .once('value')

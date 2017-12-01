@@ -81,28 +81,39 @@ class SearchScreen extends React.Component {
 
   _switchToRecipeList(){
     if(this.props.isLogin){
-      this.props.navigation.setParams({
+      const { searchText } = this.state;
+      this._initlPageState();
+      this.changeText(searchText);
+      this.setState({'sort': '食譜'});
+      this.props.navigation.setParams(
+        {
         title: `食譜`,
         next: `食材`,
         handleSave: this._switchToFoodList
-      });
-      this._initlPageState();
-      this.setState({'sort': '食譜'});
+        },
+        () => {
+          this.makeRemoteRequest();
+        }
+      );
     }else{
       alert("請先登入 Facebook");
     }
   }
 
   _switchToFoodList(){
-    this.props.navigation.setParams({
-      title: `食材`,
-      next: `食譜`,
-      handleSave: this._switchToRecipeList
-    });
+    const { searchText } = this.state;
     this._initlPageState();
+    this.changeText(searchText);
     this.setState({
       'sort': '食材'
     });
+    this.props.navigation.setParams(
+      {
+        title: `食材`,
+        next: `食譜`,
+        handleSave: this._switchToRecipeList
+      }
+    );
   }
 
   _setFocusFood(category, id){
@@ -262,7 +273,7 @@ class SearchScreen extends React.Component {
     return (
       <View style={styles.wrapper}>
       {this.renderHeader()}
-      <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0, backgroundColor: '#E9E9EF' }}>
+      <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0, marginTop: 0, backgroundColor: '#E9E9EF' }}>
         <FlatList
           data={this.state.data}
           renderItem={this.renderItem}

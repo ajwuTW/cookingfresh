@@ -4,7 +4,8 @@ import axios from 'axios';
 import {
   FOOD_ID_FETCHING,
   FOOD_ID_FETCH_SUCCESS_CHART,
-  FOOD_ID_FETCH_SUCCESS_RECIPE
+  FOOD_ID_FETCH_SUCCESS_RECIPE,
+  FOOD_CHART_SCREEN_INIT
 } from './types';
 
 import * as api from '../api';
@@ -23,13 +24,13 @@ export const setFocusFoodId = (category, id) => {
     if(category == 'vegetable'){
       categoryPath = 'vegetable';
     }else if(category == 'seafood'){
-      categoryPath = 'meet/fish';
+      categoryPath = 'seafood';
     }else if(category == 'chicken'){
-      categoryPath = 'meet/chicken';
+      categoryPath = 'others';
     }else if(category == 'egg'){
-      categoryPath = 'meet/pork';
+      categoryPath = 'others';
     }else if(category == 'pork'){
-      categoryPath = 'meet/pork';
+      categoryPath = 'others';
     }
     var today = new Date();
     var dd = today.getDate();
@@ -47,22 +48,22 @@ export const setFocusFoodId = (category, id) => {
           snapshot.forEach(function(childSnapshot) {
             var tmp = 1*childSnapshot.val();
             var date = childSnapshot.key;
-            
+
             if((currentToday-date)<=10000){
               var dot = [
-                  Date.UTC(date.substring(0,4)-46, date.substring(4,6)-1, date.substring(6,8))
+                  Date.UTC(date.substring(0,4)-46, date.substring(4,6)-1, date.substring(6,8)),
                   tmp
               ];
               chartData['first'].push(dot);
             }else if((currentToday-date)<=20000){
               var dot = [
-                  Date.UTC(date.substring(0,4)-45, date.substring(4,6)-1, date.substring(6,8))
+                  Date.UTC(date.substring(0,4)-45, date.substring(4,6)-1, date.substring(6,8)),
                   tmp
               ];
               chartData['second'].push(dot);
             }else if((currentToday-date)<=30000){
               var dot = [
-                  Date.UTC(date.substring(0,4)-44, date.substring(4,6)-1, date.substring(6,8))
+                  Date.UTC(date.substring(0,4)-44, date.substring(4,6)-1, date.substring(6,8)),
                   tmp
               ];
               chartData['third'].push(dot);
@@ -81,5 +82,14 @@ export const setFocusFoodId = (category, id) => {
              alert(error.message);
           })
         });
+  };
+};
+
+
+export const initFoodChartScreen = () => {
+  return (dispatch) => {
+    dispatch({
+      type: FOOD_CHART_SCREEN_INIT
+    })
   };
 };

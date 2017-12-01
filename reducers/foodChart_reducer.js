@@ -2,7 +2,8 @@ import _ from 'lodash';
 import {
   FOOD_ID_FETCHING,
   FOOD_ID_FETCH_SUCCESS_CHART,
-  FOOD_ID_FETCH_SUCCESS_RECIPE
+  FOOD_ID_FETCH_SUCCESS_RECIPE,
+  FOOD_CHART_SCREEN_INIT
 } from '../actions/types';
 
 const INITIAL_FOOD_STATE ={
@@ -34,6 +35,8 @@ export default function (state = INITIAL_FOOD_STATE , action) {
                       };
    case FOOD_ID_FETCHING:
      return { ...state, isLoad: false };
+   case FOOD_CHART_SCREEN_INIT:
+     return INITIAL_FOOD_STATE;
     default:
       return state;
   }

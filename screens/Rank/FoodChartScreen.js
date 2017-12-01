@@ -7,12 +7,13 @@ import {
   View,
   TouchableOpacity,
   Text,
-  AsyncStorage
+  AsyncStorage,
+  Dimensions
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 
 import { connect } from 'react-redux';
-import { Card, Button, ListItem, List } from 'react-native-elements';
+import { Card, Button, ListItem, List, Badge } from 'react-native-elements';
 import ChartView from 'react-native-highcharts';
 
 import * as actions from '../../actions';
@@ -20,6 +21,8 @@ import * as apis from '../../api';
 
 import FoodChart from '../../components/FoodChart';
 import { CardSection } from '../../components/common';
+
+var screen = Dimensions.get('window');
 
 class FoodChartScreen extends React.Component {
 
@@ -85,13 +88,30 @@ class FoodChartScreen extends React.Component {
   renderReceiptList() {
       return this.props.recipeList.map(recipe =>
         <View key={recipe.RecipeID} >
-          <TouchableOpacity
-            onPress={() => this._setFocusRecipe(recipe.RecipeID)}
-          >
-            <CardSection style={{borderBottomWidth: 0}} >
-              <Text>{recipe.RecipeName}</Text>
-            </CardSection>
-          </TouchableOpacity>
+          {
+            recipe.RecipeID == ""
+            ? (
+              <Badge
+                value={'找不到食譜'}
+                textStyle={{ color: 'white' }}
+                containerStyle={{
+                  backgroundColor: '#95a5a6',
+                  width: screen.width-80,
+                  alignSelf: 'center',
+                  marginTop: 5,
+                  marginBottom: 5
+                }}
+              />
+            ) : (
+              <TouchableOpacity
+                onPress={() => this._setFocusRecipe(recipe.RecipeID)}
+              >
+                <CardSection style={{borderBottomWidth: 0}} >
+                  <Text>{recipe.RecipeName}</Text>
+                </CardSection>
+              </TouchableOpacity>
+            )
+          }
         </View>
     );
   }
@@ -159,17 +179,16 @@ class FoodChartScreen extends React.Component {
       series: [{
           name: '今年',
           color: 'rgba(223, 83, 83, .5)',
-          // Define the data points. All series have a dummy year
-          // of 1970/71 in order to be compared on the same x axis. Note
-          // that in JavaScript, months start at 0 for January, 1 for February etc.
           data: chartData['first']
       }, {
           name: '去年',
           color: 'rgba(149, 165, 166, .3)',
+          visible: false,
           data: chartData['second']
       }, {
           name: '前年',
           color: 'rgba(223, 83, 83, .3)',
+          visible: false,
           data: chartData['third']
       }]
     }
@@ -181,11 +200,15 @@ class FoodChartScreen extends React.Component {
     }
   }
 
+  componentWillUnmount(){
+    this.props.initFoodChartScreen();
+  }
+
   render() {
     if(this.props.isLoad){
       return(
         <ScrollView style={styles.container, {marginBottom: 20}}>
-          <View style={{ marginTop: 10}}>
+          <View style={{ marginTop: 0}}>
             <FoodChart id={this.state.foodId}
                        config={this._getConf(this.props.chartData)}
                        options={this._getOptions()}
