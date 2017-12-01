@@ -96,7 +96,6 @@ class RankScreen extends React.Component {
       if( this.state.selectedIndex == 0 ){
         const { page, seed, lastKnownVal, maxPageSize } = this.state.vegetable;
         if(page>maxPageSize){
-          console.log('return')
           return;
         }
         if(lastKnownVal){
@@ -118,7 +117,6 @@ class RankScreen extends React.Component {
       if( this.state.selectedIndex == 1 || this.state.fish.data.length == 0 ){
         const { page, seed, lastKnownVal, maxPageSize } = this.state.fish;
         if(page>maxPageSize){
-          console.log('return')
           return;
         }
         if(lastKnownVal){

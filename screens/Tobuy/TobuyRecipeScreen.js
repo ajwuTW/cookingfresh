@@ -27,9 +27,6 @@ class TobuyRecipeScreen extends React.Component {
   };
 
   componentWillMount(){
-    // console.log("params4");
-    // console.log(this.props.navigation.state.params);
-    console.log('mount');
   }
 
   _plusRecipeQty(recipeId, description, food, exception){

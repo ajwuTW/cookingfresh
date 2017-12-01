@@ -36,7 +36,6 @@ class RecipeDetailScreen extends React.Component {
 
   componentWillMount(){
     const { recipeId } = this.props.navigation.state.params;
-    console.log(recipeId);
     this.props.setFocusRecipeId(recipeId, this.props.isLogin, this.props.uid);
   }
 
