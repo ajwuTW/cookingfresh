@@ -6,7 +6,8 @@ import {
   Dimensions,
   View,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  ImageBackground
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ExpoLinksView } from '@expo/samples';
@@ -17,6 +18,8 @@ import { Badge, Button, Card, ListItem, List } from 'react-native-elements';
 
 import * as actions from '../actions';
 import * as apis from '../api';
+
+import Colors from '../constants/Colors-theme';
 
 import Checkbox2  from '../components/Checkbox2';
 
@@ -45,9 +48,9 @@ class TobuyListScreen extends React.Component {
                       containerStyle={{ marginRight: 10}}
                       onPress={() => params.handleSave()}
                    />,
-      headerTintColor: "#2c3e50",
+      headerTintColor: Colors.headerTintColor,
       headerStyle: {
-         backgroundColor:"#f1c40f"
+         backgroundColor: Colors.headerColor
       }
     };
   };
@@ -118,7 +121,7 @@ class TobuyListScreen extends React.Component {
     }
     if(!this.props.isLogin){
       return (
-        <View style={styles.wrapper}>
+        <ImageBackground source={require('../assets/images/default-backgroud.png')} style={styles.wrapper} >
           <Badge
             value={'尚未登入 Facebook'}
             textStyle={{ color: 'white' }}
@@ -129,20 +132,22 @@ class TobuyListScreen extends React.Component {
               marginTop: 10
             }}
           />
-        </View>
+        </ImageBackground>
       );
     }else{
       if(this.props.isLoad){
         return(
-            this.renderToBuyScreen()
+          <ImageBackground source={require('../assets/images/default-backgroud.png')} style={styles.wrapper} >
+            {this.renderToBuyScreen()}
+          </ImageBackground>
         );
       }else{
         return (
-            <ScrollView
-              style={{ backgroundColor: 'white' }}
-            >
+          <ImageBackground source={require('../assets/images/default-backgroud.png')} style={styles.wrapper} >
+            <ScrollView >
               <Image source={require('../assets/gif/loading04.gif')} style={styles.loading} />
             </ScrollView>
+          </ImageBackground>
         );
       }
     }
@@ -155,16 +160,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 15,
-    backgroundColor: 'rgba(233,233,239, 1)'
+    backgroundColor: Colors.backgroundColor
   },
   wrapper: {
     width: screen.width,
     paddingTop: 0,
     flex: 1,
-    backgroundColor: 'rgba(233,233,239, 1)'
+    backgroundColor: Colors.backgroundColor
   },
   loading: {
     resizeMode:'contain'
+  },
+  backgroundImage: {
+    flex: 1
   },
 });
 

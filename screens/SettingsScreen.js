@@ -6,7 +6,8 @@ import {
   Animated,
   View,
   Text,
-  Image
+  Image,
+  ImageBackground
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { connect } from 'react-redux';
@@ -14,6 +15,8 @@ import { Card, Button, SocialIcon } from 'react-native-elements';
 
 import * as actions from '../actions';
 import * as apis from '../api';
+
+import Colors from '../constants/Colors-theme';
 
 import { CardSection } from '../components/common';
 
@@ -29,9 +32,9 @@ class SettingsScreen extends React.Component {
 
   static navigationOptions = {
     title: '使用者',
-    headerTintColor: "#2c3e50",
+    headerTintColor: Colors.headerTintColor,
     headerStyle: {
-     backgroundColor:"#f1c40f"
+     backgroundColor: Colors.headerColor
    }
   };
 
@@ -92,7 +95,7 @@ class SettingsScreen extends React.Component {
       var uri = 'https://graph.facebook.com/'+profile.uid+'/picture?type=normal';
       return(
 
-          <View style={styles.wrapper}>
+          <ImageBackground source={require('../assets/images/default-backgroud.png')} style={styles.wrapper} >
             <Animated.View style={{opacity: fadeAnim}}>
               <ScrollView
                 style={styles.container}>
@@ -114,7 +117,7 @@ class SettingsScreen extends React.Component {
                 </Card>
               </ScrollView>
             </Animated.View>
-          </View>
+          </ImageBackground>
       );
     }
   }
@@ -123,7 +126,8 @@ class SettingsScreen extends React.Component {
 const styles = StyleSheet.create({
   wrapper: {
       paddingTop: 0,
-      flex: 1
+      flex: 1,
+      backgroundColor: Colors.backgroundColor
   },
   modal: {
     justifyContent: 'center',

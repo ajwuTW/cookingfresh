@@ -9,7 +9,8 @@ import {
   TouchableOpacity,
   FlatList,
   Text,
-  ActivityIndicator
+  ActivityIndicator,
+  ImageBackground
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ExpoLinksView } from '@expo/samples';
@@ -20,6 +21,8 @@ import { Badge, Button, ButtonGroup, Card, ListItem, List, SearchBar } from 'rea
 
 import * as actions from '../actions';
 import * as apis from '../api';
+
+import Colors from '../constants/Colors-theme';
 
 import Checkbox2  from '../components/Checkbox2';
 import RankCard  from '../components/RankCard';
@@ -58,9 +61,9 @@ class RankScreen extends React.Component {
       const { params = {} } = navigation.state;
       return {
         title: `排行榜`,
-        headerTintColor: "#2c3e50",
+        headerTintColor: Colors.headerTintColor,
         headerStyle: {
-           backgroundColor:"#f1c40f"
+           backgroundColor: Colors.headerColor
         }
       };
     };
@@ -226,58 +229,63 @@ class RankScreen extends React.Component {
       var updateIndex = this.updateIndex.bind(this);
       let { fadeAnim } = this.state;
       return (
-        <View style={styles.wrapper}>
-        <ButtonGroup
-          onPress={updateIndex}
-          selectedIndex={selectedIndex}
-          selectedBackgroundColor='#1abc9c'
-          buttons={buttons} />
-              <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0, marginTop: 0, backgroundColor: 'rgba(233, 233, 239, 1)' }}>
-                {
-                  selectedIndex == 0
-                  ? (
-                    <FlatList
-                      data={this.state.vegetable.data}
-                      renderItem={({ item }) => (
-                        <TouchableOpacity
-                          onPress={() => this._setFocusFood('vegetable', item.id)} >
-                          <RankCard
-                            id={item.id}
-                            imageUrl={`http://fs-old.mis.kuas.edu.tw/~s1103137212/ingredient/${item.id}.jpg`}
-                          ></RankCard>
-                        </TouchableOpacity>
-                      )}
-                      keyExtractor={item => item.id}
-                      ItemSeparatorComponent={this.renderSeparator}
-                      // onRefresh={this.handleRefresh}
-                      // refreshing={this.state.refreshing}
-                      onEndReached={this.handleLoadMore_vegetable}
-                      onEndReachedThreshold={1}
-                    />
-                  ) :(
-                    <FlatList
-                      data={this.state.fish.data}
-                      renderItem={({ item }) => (
-                        <TouchableOpacity
-                          // key={item.id+'touch'}
-                          onPress={() => this._setFocusFood('seafood', item.id)} >
-                          <RankCard
-                            id={item.id}
-                            imageUrl={`http://fs-old.mis.kuas.edu.tw/~s1103137212/ingredient/${item.id}.jpg`}
-                          ></RankCard>
-                        </TouchableOpacity>
-                      )}
-                      keyExtractor={item => item.id}
-                      ItemSeparatorComponent={this.renderSeparator}
-                      // onRefresh={this.handleRefresh}
-                      // refreshing={this.state.refreshing}
-                      onEndReached={this.handleLoadMore_fish}
-                      onEndReachedThreshold={1}
-                    />
-                  )
-                }
-              </List>
-        </View>
+        <ImageBackground source={require('../assets/images/default-backgroud.png')} style={styles.wrapper} >
+          <ButtonGroup
+            onPress={updateIndex}
+            selectedIndex={selectedIndex}
+            selectedBackgroundColor='#1abc9c'
+            buttons={buttons} />
+
+                <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0, marginTop: 0, backgroundColor: Colors.backgroundColor }}>
+                  {
+                    selectedIndex == 0
+                    ? (
+                        <ImageBackground source={require('../assets/images/default-backgroud.png')} style={styles.backgroundImage} >
+                          <FlatList
+                            data={this.state.vegetable.data}
+                            renderItem={({ item }) => (
+                              <TouchableOpacity
+                                onPress={() => this._setFocusFood('vegetable', item.id)} >
+                                <RankCard
+                                  id={item.id}
+                                  imageUrl={`http://fs-old.mis.kuas.edu.tw/~s1103137212/ingredient/${item.id}.jpg`}
+                                ></RankCard>
+                              </TouchableOpacity>
+                            )}
+                            keyExtractor={item => item.id}
+                            ItemSeparatorComponent={this.renderSeparator}
+                            // onRefresh={this.handleRefresh}
+                            // refreshing={this.state.refreshing}
+                            onEndReached={this.handleLoadMore_vegetable}
+                            onEndReachedThreshold={1}
+                          />
+                        </ImageBackground>
+                    ) :(
+                      <ImageBackground source={require('../assets/images/default-backgroud.png')} style={styles.backgroundImage} >
+                        <FlatList
+                          data={this.state.fish.data}
+                          renderItem={({ item }) => (
+                            <TouchableOpacity
+                              // key={item.id+'touch'}
+                              onPress={() => this._setFocusFood('seafood', item.id)} >
+                              <RankCard
+                                id={item.id}
+                                imageUrl={`http://fs-old.mis.kuas.edu.tw/~s1103137212/ingredient/${item.id}.jpg`}
+                              ></RankCard>
+                            </TouchableOpacity>
+                          )}
+                          keyExtractor={item => item.id}
+                          ItemSeparatorComponent={this.renderSeparator}
+                          // onRefresh={this.handleRefresh}
+                          // refreshing={this.state.refreshing}
+                          onEndReached={this.handleLoadMore_fish}
+                          onEndReachedThreshold={1}
+                        />
+                      </ImageBackground>
+                    )
+                  }
+                </List>
+        </ImageBackground>
       );
     }
 
@@ -306,7 +314,12 @@ const styles = StyleSheet.create({
     width: screen.width,
     paddingTop: 0,
     paddingBottom: 20,
+    backgroundColor: Colors.backgroundColor,
     flex: 1,
+  },
+  backgroundImage: {
+    width: screen.width,
+    backgroundColor: Colors.backgroundColor,
   },
   loading: {
     resizeMode:'contain'

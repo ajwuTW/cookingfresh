@@ -8,24 +8,28 @@ import {
   TouchableOpacity,
   View,
   Animated,
-  AsyncStorage
+  AsyncStorage,
+  Dimensions,
+  ImageBackground
 } from 'react-native';
 import { Card, ListItem, Button, List, ButtonGroup, CheckBox, Avatar, SocialIcon } from 'react-native-elements';
 
 import { WebBrowser } from 'expo';
 import { connect } from 'react-redux';
 
+import Colors from '../constants/Colors-theme';
 import { MonoText } from '../components/StyledText';
 
 import * as actions from '../actions';
 
+var screen = Dimensions.get('window');
 class HomeScreen extends React.Component {
 // export default class HomeScreen extends React.Component {
   static navigationOptions = {
     title: '首頁',
-    headerTintColor: "#2c3e50",
+    headerTintColor: Colors.headerTintColor,
     headerStyle: {
-     backgroundColor:"#f1c40f"
+     backgroundColor: Colors.headerColor
    }
   };
 
@@ -50,20 +54,18 @@ class HomeScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-          <View style={styles.welcomeContainer}>
-            <Image
-              source={
-                __DEV__
-                  ? require('../assets/images/cookingfreshIcon.png')
-                  : require('../assets/images/cookingfreshIcon.png')
-              }
-              style={styles.welcomeImage}
-            />
-          </View>
-        </ScrollView>
-      </View>
+      <ImageBackground source={require('../assets/images/default-backgroud.png')} style={styles.wrapper} >
+        <View style={styles.welcomeContainer}>
+          <Image
+            source={
+              __DEV__
+                ? require('../assets/images/CookingFresh-icon-v2.png')
+                : require('../assets/images/CookingFresh-icon-v2.png')
+            }
+            style={styles.welcomeImage}
+          />
+        </View>
+      </ImageBackground>
     );
   }
 
@@ -108,6 +110,12 @@ class HomeScreen extends React.Component {
 export default connect(mapStateToProps, actions)(HomeScreen);
 
 const styles = StyleSheet.create({
+  wrapper: {
+    width: screen.width,
+    paddingTop: 0,
+    flex: 1,
+    backgroundColor:Colors.backgroundColor
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',

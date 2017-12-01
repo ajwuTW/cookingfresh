@@ -8,6 +8,8 @@ import { connect } from 'react-redux';
 import * as actions from '../../actions';
 import * as apis from '../../api';
 
+import Colors from '../../constants/Colors-theme';
+
 import RecipeCheckBoxRow  from '../../components/RecipeCheckBoxRow';
 
 class TobuyRecipeScreen extends React.Component {
@@ -20,9 +22,9 @@ class TobuyRecipeScreen extends React.Component {
 
   static navigationOptions = {
     title: '購物清單-食譜列表',
-    headerTintColor: "#2c3e50",
+    headerTintColor: Colors.headerTintColor,
     headerStyle: {
-     backgroundColor:"#f1c40f"
+     backgroundColor: Colors.headerColor
    }
   };
 
@@ -70,7 +72,7 @@ class TobuyRecipeScreen extends React.Component {
 
   render() {
     return (
-      <ScrollView style={{ backgroundColor: 'rgba(233,233,239, 1)', paddingTop: 3 }}>
+      <ScrollView>
         {this.renderToBuyRecipeCheckBoxList()}
       </ScrollView>
     );

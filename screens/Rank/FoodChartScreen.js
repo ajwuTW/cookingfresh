@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   Text,
   AsyncStorage,
-  Dimensions
+  Dimensions,
+  ImageBackground
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 
@@ -18,6 +19,8 @@ import ChartView from 'react-native-highcharts';
 
 import * as actions from '../../actions';
 import * as apis from '../../api';
+
+import Colors from '../../constants/Colors-theme';
 
 import FoodChart from '../../components/FoodChart';
 import { CardSection } from '../../components/common';
@@ -47,9 +50,9 @@ class FoodChartScreen extends React.Component {
 
   static navigationOptions = {
     title: '食材價格波動',
-    headerTintColor: "#2c3e50",
+    headerTintColor: Colors.headerTintColor,
     headerStyle: {
-     backgroundColor:"#f1c40f"
+     backgroundColor: Colors.headerColor
    }
   };
 
@@ -207,24 +210,28 @@ class FoodChartScreen extends React.Component {
   render() {
     if(this.props.isLoad){
       return(
-        <ScrollView style={styles.container, {marginBottom: 20}}>
-          <View style={{ marginTop: 0}}>
-            <FoodChart id={this.state.foodId}
-                       config={this._getConf(this.props.chartData)}
-                       options={this._getOptions()}
-            ></FoodChart>
-            <Card
-              title='食譜'
-              containerStyle={{padding: 10}}
-            >
-              {this.renderReceiptList()}
-            </Card>
-          </View>
-        </ScrollView>
+        <ImageBackground source={require('../../assets/images/default-backgroud.png')} style={styles.backgroundImage} >
+          <ScrollView style={styles.container, {marginBottom: 20}}>
+            <View style={{ marginTop: 0}}>
+              <FoodChart id={this.state.foodId}
+                         config={this._getConf(this.props.chartData)}
+                         options={this._getOptions()}
+              ></FoodChart>
+              <Card
+                title='食譜'
+                containerStyle={{padding: 10}}
+              >
+                {this.renderReceiptList()}
+              </Card>
+            </View>
+          </ScrollView>
+        </ImageBackground>
       );
     }else{
       return (
-        <Image source={require('../../assets/gif/loading04.gif')} style={styles.loading} />
+        <ImageBackground source={require('../../assets/images/default-backgroud.png')} style={styles.backgroundImage} >
+          <Image source={require('../../assets/gif/loading04.gif')} style={styles.loading} />
+        </ImageBackground>
       );
     }
   }
@@ -243,6 +250,11 @@ const styles = StyleSheet.create({
 		height: 250,
     marginTop: 30
 	},
+  backgroundImage: {
+    width: screen.width,
+    height: screen.height,
+    backgroundColor: Colors.backgroundColor,
+  },
   loading: {
     width: null,
     height: null,

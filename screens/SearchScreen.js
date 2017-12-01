@@ -7,7 +7,8 @@ import {
   FlatList,
   ActivityIndicator,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  ImageBackground
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { List, ListItem, SearchBar, Badge, Card } from "react-native-elements";
@@ -15,6 +16,8 @@ import { connect } from 'react-redux';
 
 import * as actions from '../actions';
 import * as apis from '../api';
+
+import Colors from '../constants/Colors-theme';
 
 import RankCard  from '../components/RankCard';
 
@@ -50,9 +53,9 @@ class SearchScreen extends React.Component {
                       containerStyle={{ marginRight: 10}}
                       onPress={() => params.handleSave()}
                    />,
-      headerTintColor: "#2c3e50",
+      headerTintColor: Colors.headerTintColor,
       headerStyle: {
-         backgroundColor:"#f1c40f"
+         backgroundColor: Colors.headerColor
       }
     };
   };
@@ -204,10 +207,13 @@ class SearchScreen extends React.Component {
   };
 
   renderHeader = () => {
-    return <SearchBar
-              onChangeText={this.changeText}
-              placeholder={`請輸入${this.state.sort}名稱`}
-              lightTheme round />;
+    return (
+        <SearchBar
+          containerStyle={{backgroundColor: Colors.backgroundColor}}
+          onChangeText={this.changeText}
+          placeholder={`請輸入${this.state.sort}名稱`}
+          lightTheme round />
+    );
   };
 
   renderFooter = () => {
@@ -270,23 +276,25 @@ class SearchScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.wrapper}>
-      {this.renderHeader()}
-      <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0, marginTop: 0, backgroundColor: '#E9E9EF' }}>
-        <FlatList
-          data={this.state.data}
-          renderItem={this.renderItem}
-          keyExtractor={item => item.IngredientId||item.RecipeID || 'null'}
-          ItemSeparatorComponent={this.renderSeparator}
-          // ListHeaderComponent={this.renderHeader}
-          ListFooterComponent={this.renderFooter}
-          // onRefresh={this.handleRefresh}
-          // refreshing={this.state.refreshing}
-          onEndReached={this.handleLoadMore}
-          onEndReachedThreshold={1}
-        />
-      </List>
-        </View>
+      <ImageBackground source={require('../assets/images/default-backgroud.png')} style={styles.wrapper} >
+        {this.renderHeader()}
+        <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0, marginTop: 0, backgroundColor: Colors.backgroundColor }}>
+          <ImageBackground source={require('../assets/images/default-backgroud.png')} style={styles.backgroundImage} >
+            <FlatList
+              data={this.state.data}
+              renderItem={this.renderItem}
+              keyExtractor={item => item.IngredientId||item.RecipeID || 'null'}
+              ItemSeparatorComponent={this.renderSeparator}
+              // ListHeaderComponent={this.renderHeader}
+              ListFooterComponent={this.renderFooter}
+              // onRefresh={this.handleRefresh}
+              // refreshing={this.state.refreshing}
+              onEndReached={this.handleLoadMore}
+              onEndReachedThreshold={1}
+            />
+          </ImageBackground>
+        </List>
+      </ImageBackground>
     );
   }
 }
@@ -295,12 +303,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 0,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.backgroundColor,
   },
   wrapper: {
     width: screen.width,
     paddingTop: 0,
-    flex: 1
+    flex: 1,
+    backgroundColor: Colors.backgroundColor,
+  },
+  backgroundImage: {
+    width: screen.width,
+    backgroundColor: Colors.backgroundColor,
   },
 });
 

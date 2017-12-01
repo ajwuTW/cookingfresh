@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { TabNavigator, TabBarBottom } from 'react-navigation';
 
 import Colors from '../constants/Colors';
+import ColorsTheme from '../constants/Colors-theme';
 
 import HomeScreen from '../screens/HomeScreen';
 import TobuyListScreen from '../screens/TobuyListScreen';
@@ -49,7 +50,7 @@ export default TabNavigator(
             name={iconName}
             size={28}
             style={{ marginBottom: -3 }}
-            color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
+            color={focused ? ColorsTheme.tabIconSelected : ColorsTheme.headerTintColor}
           />
         );
       },
@@ -58,9 +59,13 @@ export default TabNavigator(
     tabBarPosition: 'bottom',
     initialRouteName: 'Home',
     tabBarOptions: {
+      activeTintColor: ColorsTheme.headerTintColor,
+      activeBackgroundColor: ColorsTheme.headerColor,
+      inactiveTintColor: ColorsTheme.headerTintColor,
+      inactiveBackgroundColor: ColorsTheme.headerColor,
       showLabel: false
     },
-    animationEnabled: false,
+    animationEnabled: true,
     swipeEnabled: true,
   }
 );

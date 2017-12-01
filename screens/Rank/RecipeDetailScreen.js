@@ -6,7 +6,8 @@ import {
   Image,
   View,
   Text,
-  Dimensions
+  Dimensions,
+  ImageBackground
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 
@@ -15,6 +16,8 @@ import { Badge, Button, Card, ListItem, List } from 'react-native-elements';
 
 import * as actions from '../../actions';
 import * as apis from '../../api';
+
+import Colors from '../../constants/Colors-theme';
 
 import { CardSection } from '../../components/common';
 
@@ -28,9 +31,9 @@ class RecipeDetailScreen extends React.Component {
 
   static navigationOptions = {
     title: '食譜',
-    headerTintColor: "#2c3e50",
+    headerTintColor: Colors.headerTintColor,
     headerStyle: {
-     backgroundColor:"#f1c40f"
+     backgroundColor: Colors.headerColor
    }
   };
 
@@ -110,7 +113,7 @@ class RecipeDetailScreen extends React.Component {
       const resizeMode = 'center';
       if(this.props.isLogin){
         return (
-          <View style={styles.wrapper}>
+          <ImageBackground source={require('../../assets/images/default-backgroud.png')} style={styles.container} >
             <ScrollView style={{marginBottom: 0 }}>
               <View style={{ marginTop: 10, width: screen.width}}>
                 <Card
@@ -139,11 +142,11 @@ class RecipeDetailScreen extends React.Component {
                 </Card>
               </View>
             </ScrollView>
-          </View>
+          </ImageBackground>
         );
       }else{
         return (
-          <View style={styles.wrapper}>
+          <ImageBackground source={require('../../assets/images/default-backgroud.png')} style={styles.container} >
             <ScrollView >
               <View style={{ marginTop: 10, width: screen.width}}>
                 <Card
@@ -177,7 +180,7 @@ class RecipeDetailScreen extends React.Component {
                 </Card>
               </View>
             </ScrollView>
-          </View>
+          </ImageBackground>
         );
       }
     }else{
@@ -196,7 +199,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 15,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.backgroundColor,
   },
   detailWrapper: {
     marginBottom: 10,

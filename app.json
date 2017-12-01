@@ -7,12 +7,13 @@
     "sdkVersion": "23.0.0",
     "version": "1.0.0",
     "orientation": "portrait",
-    "primaryColor": "#cccccc",
-    "icon": "./assets/images/app-icon.png",
+    "backgroundImage":"./assets/images/default-backgroud.png",
+    "primaryColor": "#FAD689",
+    "icon": "./assets/images/CookingFresh-icon-v1.png",
     "splash": {
-      "image": "./assets/images/app-icon.png",
+      "image": "./assets/images/CookingFresh-icon-v2.png",
       "resizeMode": "contain",
-      "backgroundColor": "#F7D94C"
+      "backgroundColor": "#f1c40f"
     },
     "ios": {
       "supportsTablet": true

@@ -18,6 +18,8 @@ import { Badge, Button, Card, ListItem, List } from 'react-native-elements';
 import * as actions from '../../actions';
 import * as apis from '../../api';
 
+import Colors from '../../constants/Colors-theme';
+
 import Checkbox2  from '../../components/Checkbox2';
 
 var screen = Dimensions.get('window');
@@ -35,9 +37,9 @@ class TobuyFoodScreen extends React.Component {
     const { params = {} } = navigation.state;
     return {
       title: `購物清單-食材`,
-      headerTintColor: "#2c3e50",
+      headerTintColor: Colors.headerTintColor,
       headerStyle: {
-         backgroundColor:"#f1c40f"
+         backgroundColor: Colors.headerColor
       }
     };
   };
@@ -127,9 +129,7 @@ class TobuyFoodScreen extends React.Component {
   render() {
       return(
         <View style={styles.wrapper}>
-          <ScrollView
-            style={{ backgroundColor: 'rgba(233,233,239, 1)' }}
-          >
+          <ScrollView>
               {this.renderToBuyFoodCheckBoxList()}
               {this.renderToBuyExceptionCheckBoxList()}
           </ScrollView>
