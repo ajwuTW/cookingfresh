@@ -23,13 +23,15 @@ class RecipeCheckBoxRow extends Component {
   componentWillMount(){
     var id = this.props.uid;
     var count = this.props.count;
+    AsyncStorage.removeItem('recipe-'+id)
     AsyncStorage.getItem('recipe-'+id)
       .then((item) => {
            if (item) {
              var item = JSON.parse(item);
-             var description = item.description;
+             var description = item.description[0];
              var food = item.ingredient;
              var exception = item.exception;
+               console.log(description);
              this.setState({
                description, food, exception,
                isLoad: true
@@ -65,7 +67,7 @@ class RecipeCheckBoxRow extends Component {
         <View
           key={recipeId} style={styles.rowWrapper}>
           <View  style={styles.recipeText} >
-            <Text style={{padding:3, width:180}}>
+            <Text style={{margin: 3, width:150}}>
               {RecipeName}
             </Text>
             <Text style={{padding:3}}>
@@ -95,11 +97,14 @@ class RecipeCheckBoxRow extends Component {
       );
     }else{
       return (
-        <Card
-          image={require('../assets/gif/card-loading.gif')} >
-          <View style={styles.detailWrapper}>
+        <View
+          key={'none'} style={styles.rowWrapper}>
+          <View  style={styles.recipeText} >
+            <Text style={{padding:3, width:180}}>
+              {'載入中'}
+            </Text>
           </View>
-        </Card>
+        </View>
       );
     }
 
@@ -116,8 +121,7 @@ const styles = {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      margin: 10,
-      width: SCREEN.width
+      margin: 10
   },
   recipeText: {
     flex: 1,
@@ -128,10 +132,9 @@ const styles = {
     padding:2
   },
   recipePlusMinus: {
-    width: 50,
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    marginRight: 15,
+    // marginRight: 15,
     padding:2
   }
 }

@@ -233,7 +233,7 @@ class RankScreen extends React.Component {
           <ButtonGroup
             onPress={updateIndex}
             selectedIndex={selectedIndex}
-            selectedBackgroundColor='#1abc9c'
+            selectedBackgroundColor={Colors.elementeBackgroundColor}
             buttons={buttons} />
 
                 <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0, marginTop: 0, backgroundColor: Colors.backgroundColor }}>

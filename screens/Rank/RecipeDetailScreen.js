@@ -80,11 +80,9 @@ class RecipeDetailScreen extends React.Component {
       if(stepImgUri !== ""){
         return (
           <View>
-            <CardSection style={{borderBottomWidth: 0, justifyContent:'center'}} >
-                <Image
-                  style={{width: screen.width/2, height: screen.height/5}}
-                  source={{uri: stepImgUri}}/>
-            </CardSection>
+          <Image
+            style={{width: screen.width-50, height: screen.height/3, resizeMode: 'contain'}}
+            source={{uri: stepImgUri}}/>
             <CardSection style={{borderBottomWidth: 0}} >
                 <Text>{step.StepSeq+'. '+step.StepContent}</Text>
             </CardSection>
@@ -111,78 +109,55 @@ class RecipeDetailScreen extends React.Component {
   render() {
     if(this.props.isLoad){
       const resizeMode = 'center';
-      if(this.props.isLogin){
-        return (
-          <ImageBackground source={require('../../assets/images/default-backgroud.png')} style={styles.container} >
-            <ScrollView style={{marginBottom: 0 }}>
-              <View style={{ marginTop: 10, width: screen.width}}>
-                <Card
-                  image={{uri: this.props.description.RecipePicture}}
-                  title={this.props.description.RecipeName}
-                  imageStyle={{ height: 200 }}
-                >
-                  <View style={styles.detailWrapper}>
-                    <Text style={styles.italics}>{this.props.description.RecipeUnit+' 人份'}</Text>
-                  </View>
-                  <Button
-                    raised icon={{name: 'add'}}
-                    backgroundColor='#1abc9c'
-                    buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
-                    onPress={() => this._onCarPressButton()}
-                    title='加入購物清單' />
-                </Card>
-                <Card title='食材' containerStyle={{padding: 10}} >
-                  {this.renderFoodList()}
-                </Card>
-                <Card title='其他材料' containerStyle={{padding: 10}} >
-                  {this.renderExceptionList()}
-                </Card>
-                <Card title='步驟' containerStyle={{padding: 10}} >
-                  {this.renderStepList()}
-                </Card>
-              </View>
-            </ScrollView>
-          </ImageBackground>
-        );
-      }else{
-        return (
-          <ImageBackground source={require('../../assets/images/default-backgroud.png')} style={styles.container} >
-            <ScrollView >
-              <View style={{ marginTop: 10, width: screen.width}}>
-                <Card
-                  image={{uri: this.props.description.RecipePicture}}
-                  title={this.props.description.RecipeName}
-                  imageStyle={{ height: 200 }}
-                >
-                  <View style={styles.detailWrapper}>
-                    <Text style={styles.italics}>{this.props.description.RecipeUnit+' 人份'}</Text>
-                  </View>
-
-                  <Badge
-                    value={'尚未登入 Facebook'}
-                    textStyle={{ color: 'white' }}
-                    containerStyle={{
-                      backgroundColor: '#95a5a6',
-                      width: screen.width-40,
-                      alignSelf: 'center',
-                      marginTop: 10
-                    }}
-                  />
-                </Card>
-                <Card title='食材' containerStyle={{padding: 10}} >
-                  {this.renderFoodList()}
-                </Card>
-                <Card title='其他材料' containerStyle={{padding: 10}} >
-                  {this.renderExceptionList()}
-                </Card>
-                <Card title='步驟' containerStyle={{padding: 10}} >
-                  {this.renderStepList()}
-                </Card>
-              </View>
-            </ScrollView>
-          </ImageBackground>
-        );
-      }
+      return (
+        <ImageBackground source={require('../../assets/images/default-backgroud.png')} style={styles.container} >
+          <ScrollView style={{marginBottom: 0 }}>
+            <View style={{ marginTop: 10, width: screen.width}}>
+              <Card
+                containerStyle={styles.cardColor}
+                image={{uri: this.props.description.RecipePicture}}
+                title={this.props.description.RecipeName}
+                imageStyle={{ height: 200 }}
+              >
+                <View style={styles.detailWrapper}>
+                  <Text style={styles.italics}>{this.props.description.RecipeUnit+' 人份'}</Text>
+                </View>
+                {
+                  this.props.isLogin
+                  ? (
+                    <Button
+                      raised icon={{name: 'add'}}
+                      backgroundColor='#1abc9c'
+                      buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+                      onPress={() => this._onCarPressButton()}
+                      title='加入購物清單' />
+                  ) : (
+                    <Badge
+                      value={'尚未登入 Facebook'}
+                      textStyle={{ color: 'white' }}
+                      containerStyle={{
+                        backgroundColor: '#95a5a6',
+                        width: screen.width-40,
+                        alignSelf: 'center',
+                        marginTop: 10
+                      }}
+                    />
+                  )
+                }
+              </Card>
+              <Card title='食材' containerStyle={styles.cardColor} >
+                {this.renderFoodList()}
+              </Card>
+              <Card title='其他材料' containerStyle={styles.cardColor} >
+                {this.renderExceptionList()}
+              </Card>
+              <Card title='步驟' containerStyle={styles.cardColor} >
+                {this.renderStepList()}
+              </Card>
+            </View>
+          </ScrollView>
+        </ImageBackground>
+      );
     }else{
       return (
         <Image source={require('../../assets/gif/loading04.gif')} style={styles.loading} />
@@ -213,7 +188,11 @@ const styles = StyleSheet.create({
     marginRight: 100,
     resizeMode:'contain',
     flex: 1
-  }
+  },
+  cardColor: {
+    backgroundColor: Colors.elementeBackgroundColor,
+    borderColor: Colors.elementeBorderColor
+  },
 });
 
 

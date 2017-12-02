@@ -3,6 +3,8 @@ import Expo from 'expo';
 import { View, Text, Dimensions, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements'
 
+import Colors from '../constants/Colors-theme';
+
 import {Button}   from './common/Button';
 
 var screen = Dimensions.get('window');
@@ -27,7 +29,7 @@ export default class Checkbox2 extends Component {
       var checked = this.props.checked;
       if(isChecked){
         return (
-            <View style={styles.wrapper}>
+            <View style={styles.wrapper, styles.rowColor}>
                 <View style={styles.rowWrapper}>
                   <View  style={styles.recipeText} >
                     {this.renderVegetRankList()}
@@ -44,7 +46,7 @@ export default class Checkbox2 extends Component {
         );
       }else{
         return (
-            <View style={styles.wrapper}>
+            <View style={styles.wrapper, styles.rowColor}>
                 <View style={styles.rowWrapper}>
                   <View  style={styles.recipeText} >
                     {this.renderVegetRankList()}
@@ -98,5 +100,9 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 10,
-  }
+  },
+  rowColor: {
+    backgroundColor: Colors.elementeBackgroundColor,
+    borderColor: Colors.elementeBorderColor
+  },
 };

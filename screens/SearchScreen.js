@@ -209,7 +209,7 @@ class SearchScreen extends React.Component {
   renderHeader = () => {
     return (
         <SearchBar
-          containerStyle={{backgroundColor: Colors.backgroundColor}}
+          containerStyle={styles.searchBarColor}
           onChangeText={this.changeText}
           placeholder={`請輸入${this.state.sort}名稱`}
           lightTheme round />
@@ -314,6 +314,10 @@ const styles = StyleSheet.create({
   backgroundImage: {
     width: screen.width,
     backgroundColor: Colors.backgroundColor,
+  },
+  searchBarColor: {
+    backgroundColor: Colors.elementeBackgroundColor,
+    borderColor: Colors.elementeBorderColor
   },
 });
 

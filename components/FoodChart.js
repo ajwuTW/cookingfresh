@@ -4,6 +4,8 @@ import { View, Text, Dimensions, TouchableOpacity, AsyncStorage, Image } from 'r
 import { Icon, Card } from 'react-native-elements'
 import ChartView from 'react-native-highcharts';
 
+import Colors from '../constants/Colors-theme';
+
 import {Button}   from './common/Button';
 
 var screen = Dimensions.get('window');
@@ -32,7 +34,8 @@ export default class FoodChart extends Component {
       const { config, options } = this.props;
       if(this.state.isLoad){
         return (
-          <Card>
+          <Card
+            containerStyle={styles.cardColor, { padding: 0 }}>
             <ChartView style={{height:300}}
                        config={config}
                        options={options}
@@ -42,6 +45,7 @@ export default class FoodChart extends Component {
       }else{
         return (
           <Card
+            containerStyle={styles.cardColor}
             image={require('../assets/gif/card-loading.gif')} >
             <View style={styles.detailWrapper}>
             </View>
@@ -63,6 +67,10 @@ const styles = {
     width: screen.width,
     flexDirection: 'row',
     justifyContent:'space-around'
+  },
+  cardColor: {
+    backgroundColor: Colors.elementeBackgroundColor,
+    borderColor: Colors.elementeBorderColor
   },
   contentType: {
     width:  screen.width/4,

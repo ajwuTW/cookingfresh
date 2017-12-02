@@ -121,32 +121,23 @@ class FoodChartScreen extends React.Component {
   _getConf = (chartData) => {
     var Highcharts='Highcharts';
     return {
-
       chart: {
         type: 'scatter',
         animation: Highcharts.svg, // don't animate in old IE
-        marginRight: 10
+        marginRight: 10,
+        backgroundColor: Colors.elementeBackgroundColor
       },
-      title: {
-          text: this.state.description.IngredientOriginName
-      },
-      subtitle: {
-          text: this.state.description.IngredientName
-      },
+      title: { text: this.state.description.IngredientOriginName },
+      subtitle: { text: this.state.description.IngredientName },
       xAxis: {
           type: 'datetime',
           dateTimeLabelFormats: { // don't display the dummy year
-              month: '%e. %b',
-              year: '%b'
+              month: '%e. %b', year: '%b'
           },
-          title: {
-              text: 'Date'
-          }
+          title: { text: 'Date' }
       },
       yAxis: {
-          title: {
-              text: '價格'
-          },
+        title: { text: '價格' },
         startOnTick: true,
         endOnTick: true,
         showLastLabel: true
@@ -155,44 +146,43 @@ class FoodChartScreen extends React.Component {
           headerFormat: '<b>{series.name}</b><br>',
           pointFormat: '{point.x:%e. %b}: {point.y:.2f} '
       },
-
+      legend: {
+        itemStyle: {
+            color: Colors.elementeTintColor,
+            fontWeight: 'bold'
+        },
+        itemHiddenStyle: {
+            color: Colors.unfocusColor,
+            fontWeight: 'bold'
+        }
+      },
       plotOptions: {
         scatter: {
             marker: {
                 radius: 5,
                 states: {
-                    hover: {
-                        enabled: true,
-                        lineColor: 'rgb(100,100,100)'
-                    }
+                    hover: { enabled: true, lineColor: 'rgb(100,100,100)' }
                 }
             },
-            states: {
-                hover: {
-                    marker: {
-                        enabled: false
-                    }
-                }
-            }
+            states: { hover: { marker: { enabled: false } } }
         }
       },
-      exporting: {
-          enabled: false
-      },
+      exporting: { enabled: false },
       series: [{
-          name: '今年',
-          color: 'rgba(223, 83, 83, .5)',
-          data: chartData['first']
-      }, {
-          name: '去年',
-          color: 'rgba(149, 165, 166, .3)',
-          visible: false,
-          data: chartData['second']
-      }, {
           name: '前年',
-          color: 'rgba(223, 83, 83, .3)',
+          color: Colors.chartLineColorThree,
           visible: false,
           data: chartData['third']
+      }, {
+          name: '去年',
+          color: Colors.chartLineColorTwo,
+          visible: false,
+          data: chartData['second']
+      },{
+          name: '今年',
+          negativeColor: Colors.elementeBackgroundColor,
+          color: Colors.chartLineColorOne,
+          data: chartData['first']
       }]
     }
   }
@@ -219,7 +209,8 @@ class FoodChartScreen extends React.Component {
               ></FoodChart>
               <Card
                 title='食譜'
-                containerStyle={{padding: 10}}
+                containerStyle={styles.cardColor}
+                // containerStyle={{padding: 10}}
               >
                 {this.renderReceiptList()}
               </Card>
@@ -240,8 +231,7 @@ class FoodChartScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 15,
-    backgroundColor: '#fff',
+    paddingTop: 15
   },
   italics: {
     fontStyle: 'italic'
@@ -254,6 +244,10 @@ const styles = StyleSheet.create({
     width: screen.width,
     height: screen.height,
     backgroundColor: Colors.backgroundColor,
+  },
+  cardColor: {
+    backgroundColor: Colors.elementeBackgroundColor,
+    borderColor: Colors.elementeBorderColor
   },
   loading: {
     width: null,

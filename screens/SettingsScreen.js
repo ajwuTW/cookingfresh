@@ -39,24 +39,12 @@ class SettingsScreen extends React.Component {
   };
 
   state = {
-    showWelcom: true,
-    fadeAnim: new Animated.Value(0)
+    showWelcom: true
   }
 
 
   async componentWillMount() {
-    this._AnimatedStart(0, 0);
     this.props.checkTokenProfile();
-  }
-
-  _AnimatedStart(value, duration){
-    Animated.timing(
-      this.state.fadeAnim,
-      {
-        toValue: value,
-        duration: duration
-      }
-    ).start();
   }
 
   _fbLogin(){
@@ -69,42 +57,21 @@ class SettingsScreen extends React.Component {
   render() {
     const { firebase, profile, isLogin } = this.props;
     let { fadeAnim } = this.state;
-
-    if( !isLogin ){
-      //default
-      this._AnimatedStart(1, 1000);
-      return(
-        <View style={styles.wrapper}>
-          <Animated.View style={{opacity: fadeAnim}}>
-            <ScrollView>
-              <Card >
-                <SocialIcon
-                  title='登入'
-                  button
-                  onPress={this._fbLogin}
-                  type='facebook'
-                />
-              </Card>
-            </ScrollView>
-          </Animated.View>
-        </View>
-      );
-    }else{
-      // isLogin
-      this._AnimatedStart(1, 1000);
-      var uri = 'https://graph.facebook.com/'+profile.uid+'/picture?type=normal';
-      return(
-
-          <ImageBackground source={require('../assets/images/default-backgroud.png')} style={styles.wrapper} >
-            <Animated.View style={{opacity: fadeAnim}}>
-              <ScrollView
-                style={styles.container}>
-                <Card >
+    return(
+      <ImageBackground source={require('../assets/images/default-backgroud.png')} style={styles.wrapper} >
+          <ScrollView style={styles.container}>
+            <Card
+              containerStyle={styles.cardColor}
+            >
+            {
+              isLogin
+              ? (
+                <View>
                   <View style={styles.image_view}>
                     <Image
                       style={styles.image}
                       resizeMode="cover"
-                      source={{ uri: uri }}
+                      source={{ uri: 'https://graph.facebook.com/'+profile.uid+'/picture?type=normal' }}
                     />
                     <Text style={styles.text_username}>{profile.displayName}</Text>
                   </View>
@@ -114,12 +81,21 @@ class SettingsScreen extends React.Component {
                     onPress={this._fbLogout}
                     type='facebook'
                   />
-                </Card>
-              </ScrollView>
-            </Animated.View>
-          </ImageBackground>
-      );
-    }
+                </View>
+
+              ) : (
+                <SocialIcon
+                  title='登入'
+                  button
+                  onPress={this._fbLogin}
+                  type='facebook'
+                />
+              )
+            }
+            </Card>
+          </ScrollView>
+    </ImageBackground>
+    );
   }
 }
 
@@ -151,7 +127,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 50,
     marginBottom: 50
-  }
+  },
+  cardColor: {
+    backgroundColor: Colors.elementeBackgroundColor,
+    borderColor: Colors.elementeBorderColor
+  },
 });
 
 

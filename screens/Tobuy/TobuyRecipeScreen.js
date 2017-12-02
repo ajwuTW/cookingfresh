@@ -32,6 +32,7 @@ class TobuyRecipeScreen extends React.Component {
   }
 
   _plusRecipeQty(recipeId, description, food, exception){
+    console.log(food);
       this.props.plusRecipeQty({recipeId, description, food, exception});
   }
   _minusRecipeQty(recipeId, count, description, food, exception){
@@ -58,7 +59,7 @@ class TobuyRecipeScreen extends React.Component {
         var count = list.count;
         return(
           <View key={uid}
-            style={{ backgroundColor: '#fff', padding:3, margin:3 }}>
+            style={styles.rowColor}>
             <RecipeCheckBoxRow
               uid={uid}
               count={count}
@@ -84,6 +85,11 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 3,
     backgroundColor: '#fff',
+  },
+  rowColor: {
+    margin:8,
+    backgroundColor: Colors.elementeBackgroundColor,
+    borderColor: Colors.elementeBorderColor
   },
 });
 

@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { View, Text, ScrollView, Dimensions, AsyncStorage } from 'react-native';
 import { Button, Card } from 'react-native-elements';
-import * as apis from '../api';
 
+import * as apis from '../api';
+import * as hardcode from '../hardcode';
+
+import Colors from '../constants/Colors-theme';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -15,8 +18,10 @@ class RankCard extends Component {
         IngredientName: '',
         IngredientOriginName: ''
       },
+      isSeasonal: false,
       isLoad: false
     }
+    this._checkIsSeasonal = this._checkIsSeasonal.bind(this);
   }
   componentWillMount(){
     var id = this.props.id;
@@ -27,15 +32,20 @@ class RankCard extends Component {
     AsyncStorage.getItem('food-'+id)
       .then((item) => {
            if (item) {
+             var description = JSON.parse(item);
+             var isSeasonal = this._checkIsSeasonal(description.IngredientName);
              this.setState({
-               description: JSON.parse(item),
+               description: description,
+               isSeasonal: isSeasonal,
                isLoad: true
              });
            }else {
              apis.getFoodDescriptionByFoodId(id).then(({description}) => {
                AsyncStorage.setItem('food-'+id, JSON.stringify(description));
+               var isSeasonal = this._checkIsSeasonal(description.IngredientName);
                this.setState({
                  description: description,
+                 isSeasonal: isSeasonal,
                  isLoad: true
                });
              }).catch((error)=>{
@@ -45,31 +55,37 @@ class RankCard extends Component {
            }
       });
   }
+  _checkIsSeasonal(FoodName){
+      var season_vegetable = hardcode.getSeasonVegetable_NOW();
+      console.log(FoodName);
+      if(season_vegetable[FoodName]){
+        console.log('true');
+        return true;
+      }else{
+        console.log('false');
+        return false;
+      }
+  }
 
   render() {
     var id = this.props.id;
     var imageUrl= this.props.imageUrl;
-    if(this.state.isLoad){
-      const{ IngredientName, IngredientOriginName } = this.state.description;
-      return (
-        <Card
-          title={IngredientName}
-          imageProps={{resizeMode: 'cover'}}
-          image={{uri: imageUrl}} >
-          <View style={styles.detailWrapper}>
-            <Text style={styles.italics}>{IngredientOriginName}</Text>
-          </View>
-        </Card>
-      );
-    }else{
-      return (
-        <Card
-          image={require('../assets/gif/card-loading.gif')} >
-          <View style={styles.detailWrapper}>
-          </View>
-        </Card>
-      );
-    }
+    const{ IngredientName, IngredientOriginName } = this.state.description;
+    return (
+      <Card
+        title={IngredientName}
+        containerStyle={styles.cardColor}
+        imageProps={{resizeMode: 'contain'}}
+        image={
+          __DEV__
+            ? {uri: imageUrl, cache: 'reload'}
+            : require('../assets/gif/card-loading.gif')
+        } >
+        <View style={styles.detailWrapper}>
+          <Text style={styles.italics}>{IngredientOriginName}</Text>
+        </View>
+      </Card>
+    );
 
   }
 }
@@ -79,6 +95,10 @@ const styles = {
     marginBottom: 10,
     flexDirection: 'row',
     justifyContent: 'space-around'
+  },
+  cardColor: {
+    backgroundColor: Colors.elementeBackgroundColor,
+    borderColor: Colors.elementeBorderColor
   },
   italics: {
     fontStyle: 'italic'

@@ -2,6 +2,7 @@ const URL = "http://fs.mis.kuas.edu.tw/~s1103137212/topic_project/";
 import firebase from 'firebase';
 
 export const getRankInVegetableByPageing = (measure, id, isFirstPage) => {
+
   return firebase.database().ref(`/rank/vegetable`)
       .orderByChild('measure')
       .startAt(measure)

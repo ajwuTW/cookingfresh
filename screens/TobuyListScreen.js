@@ -21,8 +21,6 @@ import * as apis from '../api';
 
 import Colors from '../constants/Colors-theme';
 
-import Checkbox2  from '../components/Checkbox2';
-
 import TobuyFoodScreen  from './Tobuy/TobuyFoodScreen';
 import TobuyRecipeScreen  from './Tobuy/TobuyRecipeScreen';
 

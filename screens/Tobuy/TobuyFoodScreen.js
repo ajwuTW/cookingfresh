@@ -91,7 +91,7 @@ class TobuyFoodScreen extends React.Component {
           <TouchableOpacity
             key={uid}
             onPress={()=>this._setFoodChecked(food, uid, checked )}>
-            <View style={{ backgroundColor: '#fff', padding:3, margin:3 }}>
+            <View style={styles.rowColor, { padding:3, margin:3 }}>
               <Checkbox2
                 isChecked={checked}
                 content={content}
@@ -115,11 +115,8 @@ class TobuyFoodScreen extends React.Component {
           <TouchableOpacity
             key={uid}
             onPress={()=>this._setExceptionChecked(exception, uid, checked )}>
-            <View style={{ backgroundColor: '#fff', padding:5, margin:3 }}>
-              <Checkbox2
-                isChecked={checked}
-                content={content}
-              />
+            <View style={styles.rowColor, { padding:3, margin:3 }}>
+              <Checkbox2 isChecked={checked} content={content} />
             </View>
           </TouchableOpacity>
         );
@@ -128,12 +125,10 @@ class TobuyFoodScreen extends React.Component {
 
   render() {
       return(
-        <View style={styles.wrapper}>
-          <ScrollView>
-              {this.renderToBuyFoodCheckBoxList()}
-              {this.renderToBuyExceptionCheckBoxList()}
-          </ScrollView>
-        </View>
+        <ScrollView>
+            {this.renderToBuyFoodCheckBoxList()}
+            {this.renderToBuyExceptionCheckBoxList()}
+        </ScrollView>
       );
   }
 }
@@ -150,6 +145,10 @@ const styles = StyleSheet.create({
   },
   loading: {
     resizeMode:'contain'
+  },
+  rowColor: {
+    backgroundColor: Colors.elementeBackgroundColor,
+    borderColor: Colors.elementeBorderColor
   },
 });
 
