@@ -25,8 +25,12 @@ var screen = Dimensions.get('window');
 
 class RecipeDetailScreen extends React.Component {
 
+  // INITIAL
   constructor(props) {
     super(props);
+    this.state ={
+      isLoad:false
+    }
   }
 
   static navigationOptions = {
@@ -37,9 +41,14 @@ class RecipeDetailScreen extends React.Component {
    }
   };
 
-  componentWillMount(){
+  // LIFE CYCLE
+  componentDidMount(){
     const { recipeId } = this.props.navigation.state.params;
     this.props.setFocusRecipeId(recipeId, this.props.isLogin, this.props.uid);
+  }
+
+  componentWillUnmount(){
+    this.props.initRecipeDetailScreen();
   }
 
   _onCarPressButton(){
@@ -57,8 +66,8 @@ class RecipeDetailScreen extends React.Component {
       return this.props.food.map(food =>
         <View key={food.IngredientName} >
             <CardSection style={{borderBottomWidth: 0}} >
-                <Text>{food.IngredientName}</Text>
-                <Text>{food.IngredientQty+' '+food.IngredientUnit}</Text>
+                <Text style={styles.textSubColor}>{food.IngredientName}</Text>
+                <Text style={styles.textSubColor}>{food.IngredientQty+' '+food.IngredientUnit}</Text>
             </CardSection>
         </View>
     );
@@ -68,8 +77,8 @@ class RecipeDetailScreen extends React.Component {
       return this.props.exception.map(exception =>
         <View key={exception.IngredientName} >
             <CardSection style={{borderBottomWidth: 0}} >
-                <Text>{exception.IngredientName}</Text>
-                <Text>{exception.IngredientUnit}</Text>
+                <Text style={styles.textSubColor}>{exception.IngredientName}</Text>
+                <Text style={styles.textSubColor}>{exception.IngredientUnit}</Text>
             </CardSection>
         </View>
     );
@@ -83,15 +92,15 @@ class RecipeDetailScreen extends React.Component {
           <Image
             style={{width: screen.width-50, height: screen.height/3, resizeMode: 'contain'}}
             source={{uri: stepImgUri}}/>
-            <CardSection style={{borderBottomWidth: 0}} >
-                <Text>{step.StepSeq+'. '+step.StepContent}</Text>
+            <CardSection style={{borderBottomWidth: 0, padding: 5}} >
+                <Text style={styles.textSubColor}>{step.StepSeq+'. '+step.StepContent}</Text>
             </CardSection>
           </View>
         );
       }else{
         return (
           <CardSection style={{borderBottomWidth: 0}} >
-              <Text>{step.StepSeq+'. '+step.StepContent}</Text>
+              <Text style={styles.textSubColor}>{step.StepSeq+'. '+step.StepContent}</Text>
           </CardSection>
         );
       }
@@ -111,16 +120,17 @@ class RecipeDetailScreen extends React.Component {
       const resizeMode = 'center';
       return (
         <ImageBackground source={require('../../assets/images/default-backgroud.png')} style={styles.container} >
-          <ScrollView style={{marginBottom: 0 }}>
-            <View style={{ marginTop: 10, width: screen.width}}>
+          <ScrollView style={{marginBottom: 10 }}>
+            <View style={{ marginTop: 0, width: screen.width}}>
               <Card
+                titleStyle={styles.textMainColor}
                 containerStyle={styles.cardColor}
                 image={{uri: this.props.description.RecipePicture}}
                 title={this.props.description.RecipeName}
                 imageStyle={{ height: 200 }}
               >
                 <View style={styles.detailWrapper}>
-                  <Text style={styles.italics}>{this.props.description.RecipeUnit+' 人份'}</Text>
+                  <Text style={styles.italics, styles.textSubColor}>{this.props.description.RecipeUnit+' 人份'}</Text>
                 </View>
                 {
                   this.props.isLogin
@@ -128,7 +138,8 @@ class RecipeDetailScreen extends React.Component {
                     <Button
                       raised icon={{name: 'add'}}
                       backgroundColor='#1abc9c'
-                      buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+                      textStyle={styles.textMainColor}
+                      buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}, styles.buttonColor}
                       onPress={() => this._onCarPressButton()}
                       title='加入購物清單' />
                   ) : (
@@ -145,13 +156,22 @@ class RecipeDetailScreen extends React.Component {
                   )
                 }
               </Card>
-              <Card title='食材' containerStyle={styles.cardColor} >
+              <Card title='食材'
+                titleStyle={styles.textMainColor}
+                containerStyle={styles.cardColor}
+              >
                 {this.renderFoodList()}
               </Card>
-              <Card title='其他材料' containerStyle={styles.cardColor} >
+              <Card title='其他材料'
+                titleStyle={styles.textMainColor}
+                containerStyle={styles.cardColor}
+              >
                 {this.renderExceptionList()}
               </Card>
-              <Card title='步驟' containerStyle={styles.cardColor} >
+              <Card title='步驟'
+                titleStyle={styles.textMainColor}
+                containerStyle={styles.cardColor}
+              >
                 {this.renderStepList()}
               </Card>
             </View>
@@ -160,7 +180,9 @@ class RecipeDetailScreen extends React.Component {
       );
     }else{
       return (
-        <Image source={require('../../assets/gif/loading04.gif')} style={styles.loading} />
+        <ImageBackground source={require('../../assets/images/default-backgroud.png')} style={styles.container} >
+          <Image source={require('../../assets/gif/loading.gif')} style={styles.loading} />
+        </ImageBackground>
       );
     }
   }
@@ -173,7 +195,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingTop: 15,
     backgroundColor: Colors.backgroundColor,
   },
   detailWrapper: {
@@ -193,6 +214,16 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.elementeBackgroundColor,
     borderColor: Colors.elementeBorderColor
   },
+  textMainColor: {
+    fontWeight: 'bold',
+    color: Colors.textMainColor
+  },
+  textSubColor: {
+    color: Colors.textSubColor
+  },
+  buttonColor: {
+    backgroundColor: Colors.headerColor
+  }
 });
 
 

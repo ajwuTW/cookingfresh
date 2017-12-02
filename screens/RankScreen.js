@@ -99,6 +99,7 @@ class RankScreen extends React.Component {
       if( this.state.selectedIndex == 0 ){
         const { page, seed, lastKnownVal, maxPageSize } = this.state.vegetable;
         if(page>maxPageSize){
+          renderFooter();
           return;
         }
         if(lastKnownVal){
@@ -220,8 +221,17 @@ class RankScreen extends React.Component {
     }
 
     updateIndex (selectedIndex) {
-      this._AnimatedStart(0, 0);
-      this._AnimatedStart(1, 500);
+      if(this.state.selectedIndex == selectedIndex){
+        return;
+      }
+      if(selectedIndex ==0){
+        this.refs.seafoodFlatListRef.scrollToOffset({x: 0, y: 0, animated: true})
+      }else if(selectedIndex ==1){
+        this.refs.vegetableFlatListRef.scrollToOffset({x: 0, y: 0, animated: true})
+      }
+        this._AnimatedStart(0, 0);
+        this._AnimatedStart(1, 500);
+
       this.setState({selectedIndex})
     }
 
@@ -235,13 +245,14 @@ class RankScreen extends React.Component {
             selectedIndex={selectedIndex}
             selectedBackgroundColor={Colors.elementeBackgroundColor}
             buttons={buttons} />
-
+              <Animated.View style={{opacity: fadeAnim}}>
                 <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0, marginTop: 0, backgroundColor: Colors.backgroundColor }}>
                   {
                     selectedIndex == 0
                     ? (
                         <ImageBackground source={require('../assets/images/default-backgroud.png')} style={styles.backgroundImage} >
                           <FlatList
+                            ref="vegetableFlatListRef"
                             data={this.state.vegetable.data}
                             renderItem={({ item }) => (
                               <TouchableOpacity
@@ -263,6 +274,7 @@ class RankScreen extends React.Component {
                     ) :(
                       <ImageBackground source={require('../assets/images/default-backgroud.png')} style={styles.backgroundImage} >
                         <FlatList
+                          ref="seafoodFlatListRef"
                           data={this.state.fish.data}
                           renderItem={({ item }) => (
                             <TouchableOpacity
@@ -285,13 +297,14 @@ class RankScreen extends React.Component {
                     )
                   }
                 </List>
+              </Animated.View>
         </ImageBackground>
       );
     }
 
     render() {
-      const component1 = () => <Text>蔬果</Text>
-      const component2 = () => <Text>漁貨</Text>
+      const component1 = () => <Text style={styles.textMainColor}>蔬果</Text>
+      const component2 = () => <Text style={styles.textMainColor}>漁貨</Text>
       const buttons = [{ element: component1 }, { element: component2 }];
       const { selectedIndex } = this.state;
       if(this.props.isLoad){
@@ -300,7 +313,7 @@ class RankScreen extends React.Component {
         );
       }else{
         return (
-            <Image source={require('../assets/gif/loading04.gif')} style={styles.loading} />
+            <Image source={require('../assets/gif/loading.gif')} style={styles.loading} />
         );
       }
     }
@@ -324,11 +337,13 @@ const styles = StyleSheet.create({
   loading: {
     resizeMode:'contain'
   },
-  txt: {
-      textAlign: 'center',
-      textAlignVertical: 'center',
-      fontSize: 30,
-    }
+  textMainColor: {
+    fontWeight: 'bold',
+    color: Colors.textMainColor
+  },
+  textSubColor: {
+    color: Colors.textSubColor
+  }
 });
 
 

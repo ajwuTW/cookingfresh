@@ -74,15 +74,12 @@ class RankCard extends Component {
     return (
       <Card
         title={IngredientName}
+        titleStyle={styles.textMainColor}
         containerStyle={styles.cardColor}
         imageProps={{resizeMode: 'contain'}}
-        image={
-          __DEV__
-            ? {uri: imageUrl, cache: 'reload'}
-            : require('../assets/gif/card-loading.gif')
-        } >
+        image={{uri: imageUrl, cache: 'reload'}} >
         <View style={styles.detailWrapper}>
-          <Text style={styles.italics}>{IngredientOriginName}</Text>
+          <Text style={styles.italics, styles.textSubColor}>{IngredientOriginName}</Text>
         </View>
       </Card>
     );
@@ -99,6 +96,13 @@ const styles = {
   cardColor: {
     backgroundColor: Colors.elementeBackgroundColor,
     borderColor: Colors.elementeBorderColor
+  },
+  textMainColor: {
+    fontWeight: 'bold',
+    color: Colors.textMainColor
+  },
+  textSubColor: {
+    color: Colors.textSubColor
   },
   italics: {
     fontStyle: 'italic'

@@ -9,7 +9,8 @@ import {
   RECIPE_TO_CAR_SUCCESS,
   RECIPE_TO_STATUS_RESET,
   RECIPE_ID_IS_NOT_EXISTS,
-  RECIPE_ID_IS_EXISTS
+  RECIPE_ID_IS_EXISTS,
+  RECIPE_DETAIL_SCREEN_INIT
 } from './types';
 import * as api from '../api';
 
@@ -38,7 +39,7 @@ export const setFocusRecipeId = (id, isLogin, uid) => {
           var step = recipeDetail.step;
           dispatch({
             type: RECIPE_ID_FETCH_SUCCESS,
-            payload: { id, description, food, exception, step }
+            payload: { id, description, food, exception, step, isLoad: true }
           })
         }).catch((error)=>{
            console.log("Api call error");
@@ -123,6 +124,14 @@ export const setRecipeToCarStatusReset = () => {
   return (dispatch) => {
     dispatch({
       type: RECIPE_TO_STATUS_RESET
+    })
+  }
+};
+
+export const initRecipeDetailScreen = () => {
+  return (dispatch) => {
+    dispatch({
+      type: RECIPE_DETAIL_SCREEN_INIT
     })
   }
 };

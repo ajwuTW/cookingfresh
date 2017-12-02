@@ -15,7 +15,7 @@ export default class Checkbox2 extends Component {
       return this.props.content.map(content =>{
           var id= content.id;
           return(
-            <Text key={id}>
+            <Text key={id} style={styles.textMainColor}>
               {content.text}
             </Text>
           );
@@ -27,41 +27,33 @@ export default class Checkbox2 extends Component {
       var food= this.props.food;
       var uid= this.props.uid;
       var checked = this.props.checked;
-      if(isChecked){
-        return (
-            <View style={styles.wrapper, styles.rowColor}>
-                <View style={styles.rowWrapper}>
-                  <View  style={styles.recipeText} >
-                    {this.renderVegetRankList()}
-                  </View>
-                  <View style={styles.recipeIcon} >
-                    <Icon
-                      name='check-square-o'
-                      type='font-awesome'
-                      color='#f50'
-                      iconStyle={{padding:3}}/>
-                  </View>
+      return (
+          <View style={styles.wrapper, styles.rowColor}>
+              <View style={styles.rowWrapper}>
+                <View  style={styles.recipeText} >
+                  {this.renderVegetRankList()}
                 </View>
-            </View>
-        );
-      }else{
-        return (
-            <View style={styles.wrapper, styles.rowColor}>
-                <View style={styles.rowWrapper}>
-                  <View  style={styles.recipeText} >
-                    {this.renderVegetRankList()}
-                  </View>
-                  <View style={styles.recipeIcon} >
-                    <Icon
-                      name='square-o'
-                      type='font-awesome'
-                      color='#f50'
-                      iconStyle={{padding:3}}/>
-                  </View>
+                <View style={styles.recipeIcon} >
+                  {
+                    isChecked
+                    ? (
+                      <Icon
+                        name='check-square-o'
+                        type='font-awesome'
+                        color='#f50'
+                        iconStyle={{padding:5}}/>
+                    ) : (
+                      <Icon
+                        name='square-o'
+                        type='font-awesome'
+                        color='#f50'
+                        iconStyle={{padding:5}}/>
+                    )
+                  }
                 </View>
-            </View>
-        );
-      }
+              </View>
+          </View>
+      );
     }
 }
 
@@ -70,16 +62,6 @@ const styles = {
     paddingTop: 0,
     width: screen.width,
     flex: 1
-  },
-  contentWrapper: {
-    flex: 1,
-    width: screen.width,
-    flexDirection: 'row',
-    justifyContent:'space-around'
-  },
-  contentType: {
-    width:  screen.width/4,
-    height: screen.height/4,
   },
   rowWrapper: {
       flexDirection: 'row',
@@ -99,10 +81,16 @@ const styles = {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 10,
+    marginRight: 15,
   },
   rowColor: {
     backgroundColor: Colors.elementeBackgroundColor,
     borderColor: Colors.elementeBorderColor
+  },
+  textMainColor: {
+    color: Colors.textMainColor
+  },
+  textSubColor: {
+    color: Colors.textSubColor
   },
 };

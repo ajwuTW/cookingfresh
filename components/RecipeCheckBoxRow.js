@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { View, Text, ScrollView, Dimensions, AsyncStorage } from 'react-native';
 import { Button, Card, Badge, Icon } from 'react-native-elements';
+
 import * as apis from '../api';
 
+import Colors from '../constants/Colors-theme';
 
 const SCREEN = Dimensions.get('window');
 
@@ -67,15 +69,16 @@ class RecipeCheckBoxRow extends Component {
         <View
           key={recipeId} style={styles.rowWrapper}>
           <View  style={styles.recipeText} >
-            <Text style={{margin: 3, width:150}}>
+            <Text style={styles.textMainColor}>
               {RecipeName}
             </Text>
-            <Text style={{padding:3}}>
+            <Text style={ styles.textSubColor}>
               {' '+RecipeUnit+' 人份'}
             </Text>
             <Badge
               value={total+' 人份'}
-              textStyle={{ color: 'orange' }}
+              containerStyle={{ backgroundColor: Colors.headerTintColor }}
+              textStyle={{ color: Colors.headerColor }}
               wrapperStyle={{padding:3}}
             />
           </View>
@@ -83,13 +86,13 @@ class RecipeCheckBoxRow extends Component {
             <Icon
               name='plus'
               type='font-awesome'
-              color='#f50'
+              color={Colors.elementeTintColor}
               iconStyle={{padding:3}}
               onPress={()=>this.props.onPlusPress(recipeId, description, food, exception)} />
             <Icon
               name='minus'
               type='font-awesome'
-              color='#f50'
+              color={Colors.elementeTintColor}
               iconStyle={{padding:3}}
               onPress={()=>this.props.onMinusPress(recipeId, count, description, food, exception)} />
           </View>
@@ -112,11 +115,6 @@ class RecipeCheckBoxRow extends Component {
 }
 
 const styles = {
-  detailWrapper: {
-    marginBottom: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-around'
-  },
   rowWrapper: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -134,9 +132,15 @@ const styles = {
   recipePlusMinus: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    // marginRight: 15,
     padding:2
-  }
+  },
+  textMainColor: {
+    color: Colors.textMainColor,
+    margin: 3, width:150
+  },
+  textSubColor: {
+    color: Colors.textSubColor
+  },
 }
 
 export default RecipeCheckBoxRow;

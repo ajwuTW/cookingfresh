@@ -43,7 +43,12 @@ class TobuyListScreen extends React.Component {
     return {
       title: '購物清單-'+params.title,
       headerRight: <Badge value={params.next}
-                      containerStyle={{ marginRight: 10}}
+                      textStyle={{
+                        color: Colors.headerColor,
+                        fontWeight: 'bold' }}
+                      containerStyle={{
+                        marginRight: 10,
+                        backgroundColor: Colors.headerTintColor}}
                       onPress={() => params.handleSave()}
                    />,
       headerTintColor: Colors.headerTintColor,
@@ -143,7 +148,7 @@ class TobuyListScreen extends React.Component {
         return (
           <ImageBackground source={require('../assets/images/default-backgroud.png')} style={styles.wrapper} >
             <ScrollView >
-              <Image source={require('../assets/gif/loading04.gif')} style={styles.loading} />
+              <Image source={require('../assets/gif/loading.gif')} style={styles.loading} />
             </ScrollView>
           </ImageBackground>
         );

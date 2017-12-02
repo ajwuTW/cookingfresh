@@ -29,6 +29,7 @@ var screen = Dimensions.get('window');
 
 class FoodChartScreen extends React.Component {
 
+  // INITIAL
   constructor(props) {
     super(props);
     this.state ={
@@ -41,6 +42,7 @@ class FoodChartScreen extends React.Component {
         IngredientName: '',
         IngredientOriginName: ''
       },
+      isLoad:false
     }
     this._setFocusRecipe = this._setFocusRecipe.bind(this);
     this._getConf = this._getConf.bind(this);
@@ -56,14 +58,15 @@ class FoodChartScreen extends React.Component {
    }
   };
 
-  componentWillMount(){
+  // LIFE CYCLE
+  componentDidMount(){
     const { category, foodId } = this.props.navigation.state.params;
+    console.log(foodId);
     AsyncStorage.getItem('food-'+foodId)
       .then((item) => {
            if (item) {
              this.setState({
                description: JSON.parse(item),
-               isLoad: true,
                foodId
              });
            }else {
@@ -71,7 +74,6 @@ class FoodChartScreen extends React.Component {
                AsyncStorage.setItem('food-'+foodId, JSON.stringify(description));
                this.setState({
                  description: description,
-                 isLoad: true,
                  foodId
                });
                // this.updateData();
@@ -84,40 +86,22 @@ class FoodChartScreen extends React.Component {
     this.props.setFocusFoodId(category, foodId);
   }
 
+  componentWillReceiveProps(){
+    this.setState({
+      isLoad: true
+    });
+  }
+
+  componentWillUnmount(){
+    this.props.initFoodChartScreen();
+  }
+
+  // FUNCTION
+
   _setFocusRecipe(recipeId){
     this.props.navigation.navigate('RecipeDetail', { 'recipeId': recipeId })
   }
 
-  renderReceiptList() {
-      return this.props.recipeList.map(recipe =>
-        <View key={recipe.RecipeID} >
-          {
-            recipe.RecipeID == ""
-            ? (
-              <Badge
-                value={'找不到食譜'}
-                textStyle={{ color: 'white' }}
-                containerStyle={{
-                  backgroundColor: '#95a5a6',
-                  width: screen.width-80,
-                  alignSelf: 'center',
-                  marginTop: 5,
-                  marginBottom: 5
-                }}
-              />
-            ) : (
-              <TouchableOpacity
-                onPress={() => this._setFocusRecipe(recipe.RecipeID)}
-              >
-                <CardSection style={{borderBottomWidth: 0}} >
-                  <Text>{recipe.RecipeName}</Text>
-                </CardSection>
-              </TouchableOpacity>
-            )
-          }
-        </View>
-    );
-  }
   _getConf = (chartData) => {
     var Highcharts='Highcharts';
     return {
@@ -127,17 +111,43 @@ class FoodChartScreen extends React.Component {
         marginRight: 10,
         backgroundColor: Colors.elementeBackgroundColor
       },
-      title: { text: this.state.description.IngredientOriginName },
-      subtitle: { text: this.state.description.IngredientName },
+      title: {
+        text: this.state.description.IngredientOriginName,
+        style: {
+            color: Colors.textMainColor,
+            fontWeight: 'bold'
+        }
+      },
+      subtitle: {
+        text: this.state.description.IngredientName ,
+        style: {
+            color: Colors.textSubColor,
+            fontWeight: 'bold'
+        }
+      },
       xAxis: {
           type: 'datetime',
           dateTimeLabelFormats: { // don't display the dummy year
               month: '%e. %b', year: '%b'
           },
-          title: { text: 'Date' }
+          title: {
+            text: '日期' ,
+            style: {
+                color: Colors.textSubColor,
+                fontWeight: 'bold'
+            }
+          },
+          labels: { style: { color: Colors.textSubColor } }
       },
       yAxis: {
-        title: { text: '價格' },
+        title: {
+          text: '價格',
+          style: {
+              color: Colors.textSubColor,
+              fontWeight: 'bold'
+          }
+        },
+        labels: { style: { color: Colors.textSubColor } },
         startOnTick: true,
         endOnTick: true,
         showLastLabel: true
@@ -193,15 +203,44 @@ class FoodChartScreen extends React.Component {
     }
   }
 
-  componentWillUnmount(){
-    this.props.initFoodChartScreen();
+  // DOM MAP RENDER
+  renderReceiptList() {
+      return this.props.recipeList.map(recipe =>
+        <View key={recipe.RecipeID} >
+          {
+            recipe.RecipeID == ""
+            ? (
+              <Badge
+                value={'找不到食譜'}
+                textStyle={{ color: 'white' }}
+                containerStyle={{
+                  backgroundColor: '#95a5a6',
+                  width: screen.width-80,
+                  alignSelf: 'center',
+                  marginTop: 5,
+                  marginBottom: 5
+                }}
+              />
+            ) : (
+              <TouchableOpacity
+                onPress={() => this._setFocusRecipe(recipe.RecipeID)}
+              >
+                <CardSection style={{borderBottomWidth: 0}} >
+                  <Text style={styles.textSubColor}>{recipe.RecipeName}</Text>
+                </CardSection>
+              </TouchableOpacity>
+            )
+          }
+        </View>
+    );
   }
 
+  // DOM MAJOR RENDER
   render() {
-    if(this.props.isLoad){
+    if(this.state.isLoad){
       return(
         <ImageBackground source={require('../../assets/images/default-backgroud.png')} style={styles.backgroundImage} >
-          <ScrollView style={styles.container, {marginBottom: 20}}>
+          <ScrollView style={styles.container, {marginBottom: 80}}>
             <View style={{ marginTop: 0}}>
               <FoodChart id={this.state.foodId}
                          config={this._getConf(this.props.chartData)}
@@ -209,6 +248,7 @@ class FoodChartScreen extends React.Component {
               ></FoodChart>
               <Card
                 title='食譜'
+                titleStyle={styles.textMainColor}
                 containerStyle={styles.cardColor}
                 // containerStyle={{padding: 10}}
               >
@@ -221,7 +261,7 @@ class FoodChartScreen extends React.Component {
     }else{
       return (
         <ImageBackground source={require('../../assets/images/default-backgroud.png')} style={styles.backgroundImage} >
-          <Image source={require('../../assets/gif/loading04.gif')} style={styles.loading} />
+          <Image source={require('../../assets/gif/loading.gif')} style={styles.loading} />
         </ImageBackground>
       );
     }
@@ -256,6 +296,13 @@ const styles = StyleSheet.create({
     marginRight: 100,
     resizeMode:'contain',
     flex: 1
+  },
+  textMainColor: {
+    fontWeight: 'bold',
+    color: Colors.textMainColor
+  },
+  textSubColor: {
+    color: Colors.textSubColor
   }
 });
 

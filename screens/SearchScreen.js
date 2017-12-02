@@ -50,7 +50,12 @@ class SearchScreen extends React.Component {
     return {
       title: '搜尋-'+params.title,
       headerRight: <Badge value={params.next}
-                      containerStyle={{ marginRight: 10}}
+                      textStyle={{
+                        color: Colors.headerColor,
+                        fontWeight: 'bold' }}
+                      containerStyle={{
+                        marginRight: 10,
+                        backgroundColor: Colors.headerTintColor}}
                       onPress={() => params.handleSave()}
                    />,
       headerTintColor: Colors.headerTintColor,
@@ -83,24 +88,20 @@ class SearchScreen extends React.Component {
   }
 
   _switchToRecipeList(){
-    if(this.props.isLogin){
-      const { searchText } = this.state;
-      this._initlPageState();
-      this.changeText(searchText);
-      this.setState({'sort': '食譜'});
-      this.props.navigation.setParams(
-        {
-        title: `食譜`,
-        next: `食材`,
-        handleSave: this._switchToFoodList
-        },
-        () => {
-          this.makeRemoteRequest();
-        }
-      );
-    }else{
-      alert("請先登入 Facebook");
-    }
+    const { searchText } = this.state;
+    this._initlPageState();
+    this.changeText(searchText);
+    this.setState({'sort': '食譜'});
+    this.props.navigation.setParams(
+      {
+      title: `食譜`,
+      next: `食材`,
+      handleSave: this._switchToFoodList
+      },
+      () => {
+        this.makeRemoteRequest();
+      }
+    );
   }
 
   _switchToFoodList(){
@@ -209,8 +210,12 @@ class SearchScreen extends React.Component {
   renderHeader = () => {
     return (
         <SearchBar
+          icon={{ color: Colors.unfocusColor, name: 'search' }}
+          inputStyle={{backgroundColor: Colors.backgroundColor, color:Colors.elementeTintColor}}
+          placeholderTextColor={Colors.unfocusColor}
           containerStyle={styles.searchBarColor}
           onChangeText={this.changeText}
+
           placeholder={`請輸入${this.state.sort}名稱`}
           lightTheme round />
     );
@@ -265,6 +270,8 @@ class SearchScreen extends React.Component {
           key={item.RecipeID}
           onPress={() => this._setFocusRecipe(item.RecipeID)} >
           <Card
+            titleStyle={styles.textMainColor}
+            containerStyle={styles.cardColor}
             title={item.RecipeName}
             imageProps={{resizeMode: 'cover'}}
             image={{uri: item.RecipePicture}} >
@@ -300,11 +307,6 @@ class SearchScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 0,
-    backgroundColor: Colors.backgroundColor,
-  },
   wrapper: {
     width: screen.width,
     paddingTop: 0,
@@ -319,6 +321,17 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.elementeBackgroundColor,
     borderColor: Colors.elementeBorderColor
   },
+  cardColor: {
+    backgroundColor: Colors.elementeBackgroundColor,
+    borderColor: Colors.elementeBorderColor
+  },
+  textMainColor: {
+    fontWeight: 'bold',
+    color: Colors.textMainColor
+  },
+  textSubColor: {
+    color: Colors.textSubColor
+  }
 });
 
 

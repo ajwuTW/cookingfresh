@@ -6,7 +6,8 @@ import {
   RECIPE_TO_CAR_SUCCESS,
   RECIPE_TO_STATUS_RESET,
   RECIPE_ID_IS_NOT_EXISTS,
-  RECIPE_ID_IS_EXISTS
+  RECIPE_ID_IS_EXISTS,
+  RECIPE_DETAIL_SCREEN_INIT
 } from '../actions/types';
 
 const INITIAL_STATE ={
@@ -23,14 +24,14 @@ const INITIAL_STATE ={
 export default function (state = INITIAL_STATE , action) {
   switch( action.type ){
     case RECIPE_ID_FETCH_ING:
-      return { ...state, isLoad: true };
+      return { ...state, isLoad: false };
     case RECIPE_ID_FETCH_SUCCESS:
       return { ...state, food: action.payload.food,
                          recipeid: action.payload.id,
                          description: action.payload.description,
                          exception: action.payload.exception,
                          step: action.payload.step,
-                         isLogin: action.payload.isLogin,
+                         isLoad: action.payload.isLoad,
                        };
     case RECIPE_LIST_STATUS_RESET:
       return { ...state, isLoad: false };
@@ -42,6 +43,8 @@ export default function (state = INITIAL_STATE , action) {
       return { ...state, isExists: false };
     case RECIPE_ID_IS_EXISTS:
       return { ...state, isExists: true };
+    case RECIPE_DETAIL_SCREEN_INIT:
+      return INITIAL_STATE;
     default:
       return state;
   }

@@ -73,7 +73,7 @@ class SettingsScreen extends React.Component {
                       resizeMode="cover"
                       source={{ uri: 'https://graph.facebook.com/'+profile.uid+'/picture?type=normal' }}
                     />
-                    <Text style={styles.text_username}>{profile.displayName}</Text>
+                    <Text style={styles.textMainColor}>{profile.displayName}</Text>
                   </View>
                   <SocialIcon
                     title='登出'
@@ -105,14 +105,6 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: Colors.backgroundColor
   },
-  modal: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#aaa'
-  },
-  modal4: {
-    height: screen.height
-  },
   image_view: {
     alignItems: 'center',
     marginTop: 10
@@ -131,6 +123,16 @@ const styles = StyleSheet.create({
   cardColor: {
     backgroundColor: Colors.elementeBackgroundColor,
     borderColor: Colors.elementeBorderColor
+  },
+  textMainColor: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 50,
+    marginBottom: 50,
+    color: Colors.textMainColor
+  },
+  textSubColor: {
+    color: Colors.textSubColor
   },
 });
 

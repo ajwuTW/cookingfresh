@@ -32,9 +32,9 @@ export default class FoodChart extends Component {
 
     render() {
       const { config, options } = this.props;
-      if(this.state.isLoad){
         return (
           <Card
+            titleStyle={styles.textMainColor}
             containerStyle={styles.cardColor, { padding: 0 }}>
             <ChartView style={{height:300}}
                        config={config}
@@ -42,58 +42,19 @@ export default class FoodChart extends Component {
             ></ChartView>
           </Card>
         );
-      }else{
-        return (
-          <Card
-            containerStyle={styles.cardColor}
-            image={require('../assets/gif/card-loading.gif')} >
-            <View style={styles.detailWrapper}>
-            </View>
-          </Card>
-        );
-      }
     }
 
 }
 
 const styles = {
-  wrapper: {
-    paddingTop: 0,
-    width: screen.width,
-    flex: 1
-  },
-  contentWrapper: {
-    flex: 1,
-    width: screen.width,
-    flexDirection: 'row',
-    justifyContent:'space-around'
-  },
   cardColor: {
     backgroundColor: Colors.elementeBackgroundColor,
     borderColor: Colors.elementeBorderColor
   },
-  contentType: {
-    width:  screen.width/4,
-    height: screen.height/4,
+  textMainColor: {
+    color: Colors.textMainColor
   },
-  rowWrapper: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      width: screen.width
+  textSubColor: {
+    color: Colors.textSubColor
   },
-  recipeText: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginLeft: 10,
-    padding:2
-  },
-  recipeIcon: {
-    width: 50,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 10,
-  }
 };

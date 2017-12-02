@@ -25,6 +25,7 @@ export const RECIPE_TO_CAR_SUCCESS = 'recipe_to_car_success';
 export const RECIPE_TO_STATUS_RESET = 'recipe_to_car_status_reset';
 export const RECIPE_ID_IS_EXISTS = 'recipe_id_is_exists';
 export const RECIPE_ID_IS_NOT_EXISTS = 'recipe_id_is_not_exists';
+export const RECIPE_DETAIL_SCREEN_INIT = 'recipe_detail_screen_init';
 
 
 export const TO_BUY_LIST_INIT = 'to_buy_list_init';
