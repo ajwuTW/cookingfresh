@@ -127,9 +127,9 @@ class TobuyListScreen extends React.Component {
         <ImageBackground source={require('../assets/images/default-backgroud.png')} style={styles.wrapper} >
           <Badge
             value={'尚未登入 Facebook'}
-            textStyle={{ color: 'white' }}
+            textStyle={{ color: Colors.backgroundColor, fontWeight: 'bold' }}
             containerStyle={{
-              backgroundColor: '#95a5a6',
+              backgroundColor: Colors.elementeTintColor,
               width: screen.width-40,
               alignSelf: 'center',
               marginTop: 10
@@ -146,10 +146,8 @@ class TobuyListScreen extends React.Component {
         );
       }else{
         return (
-          <ImageBackground source={require('../assets/images/default-backgroud.png')} style={styles.wrapper} >
-            <ScrollView >
-              <Image source={require('../assets/gif/loading.gif')} style={styles.loading} />
-            </ScrollView>
+          <ImageBackground source={require('../assets/images/default-backgroud.png')} style={styles.container} >
+            <Image source={require('../assets/gif/loading.gif')} style={styles.loading} />
           </ImageBackground>
         );
       }
@@ -172,7 +170,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.backgroundColor
   },
   loading: {
-    resizeMode:'contain'
+    width: null,
+    height: null,
+    marginLeft: 100,
+    marginRight: 100,
+    resizeMode:'contain',
+    flex: 1
   },
   backgroundImage: {
     flex: 1

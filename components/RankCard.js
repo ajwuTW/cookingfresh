@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, ScrollView, Dimensions, AsyncStorage } from 'react-native';
-import { Button, Card } from 'react-native-elements';
+import { Button, Card, Tile, Badge } from 'react-native-elements';
 
 import * as apis from '../api';
 import * as hardcode from '../hardcode';
@@ -29,6 +29,7 @@ class RankCard extends Component {
       IngredientName: '',
       IngredientOriginName: ''
     });
+    AsyncStorage.removeItem('food-'+id);
     AsyncStorage.getItem('food-'+id)
       .then((item) => {
            if (item) {
@@ -57,12 +58,10 @@ class RankCard extends Component {
   }
   _checkIsSeasonal(FoodName){
       var season_vegetable = hardcode.getSeasonVegetable_NOW();
-      console.log(FoodName);
+      // console.log(season_vegetable[FoodName]);
       if(season_vegetable[FoodName]){
-        console.log('true');
         return true;
       }else{
-        console.log('false');
         return false;
       }
   }
@@ -72,16 +71,35 @@ class RankCard extends Component {
     var imageUrl= this.props.imageUrl;
     const{ IngredientName, IngredientOriginName } = this.state.description;
     return (
-      <Card
-        title={IngredientName}
-        titleStyle={styles.textMainColor}
-        containerStyle={styles.cardColor}
-        imageProps={{resizeMode: 'contain'}}
-        image={{uri: imageUrl, cache: 'reload'}} >
-        <View style={styles.detailWrapper}>
-          <Text style={styles.italics, styles.textSubColor}>{IngredientOriginName}</Text>
-        </View>
-      </Card>
+      <View
+        style={{paddingTop:20}}>
+        <Tile
+          imageSrc={{uri: imageUrl, cache: 'reload'}}
+          title={IngredientName}
+          titleStyle={styles.textMainColor}
+          containerStyle={styles.cardColor}
+          onPress={this.props.onPress}
+          contentContainerStyle={{height: 70, marginTop:0}}
+        >
+            {
+              this.state.isSeasonal
+              ?(
+                <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
+                  <Text>{IngredientOriginName}</Text>
+                  <Badge value='當季'
+                      textStyle={{color: Colors.headerTintColor}}
+                      containerStyle={{ marginRight: 10, backgroundColor: Colors.headerColor}}
+                   />
+               </View>
+              ):(
+                <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
+                  <Text>{IngredientOriginName}</Text>
+                  <Text></Text>
+               </View>
+              )
+            }
+        </Tile>
+      </View>
     );
 
   }

@@ -30,37 +30,47 @@ import RankCard  from '../components/RankCard';
 var screen = Dimensions.get('window');
 
 class RankScreen extends React.Component {
+
     constructor(props) {
       super(props);
-      this._setFocusFood = this._setFocusFood.bind(this);
+
       this.state = {
         loading: false,
-        vegetable: {
-          data: [],
-          page: 1,
-          lastKnownVal: null,
-          maxPageSize: 1,
-          pageSize: 20
-        },
-        fish: {
-          data: [],
-          page: 1,
-          lastKnownVal: null,
-          maxPageSize: 1,
-          pageSize: 20
-        },
+        data: [],
+        page: 1,
         seed: 1,
         error: null,
         refreshing: false,
-        selectedIndex: 0,
-        fadeAnim: new Animated.Value(0),
+        sort: '蔬果',
+        searchText: '',
+        pageSize: 20,
+        lastKnownVal: null,
+        vegetable:{
+          maxPageSize: 1
+        },
+        seafood:{
+          maxPageSize: 1
+        }
       };
+      this._switchToSeafoodList = this._switchToSeafoodList.bind(this);
+      this._switchToVegetableList = this._switchToVegetableList.bind(this);
+      this._initlPageState = this._initlPageState.bind(this);
+      this._setFocusFood = this._setFocusFood.bind(this);
+      this._setFocusRecipe = this._setFocusRecipe.bind(this);
     }
-
     static navigationOptions = ({navigation}) => {
       const { params = {} } = navigation.state;
       return {
-        title: `排行榜`,
+        title: '搜尋-'+params.title,
+        headerRight: <Badge value={params.next}
+                        textStyle={{
+                          color: Colors.headerColor,
+                          fontWeight: 'bold' }}
+                        containerStyle={{
+                          marginRight: 10,
+                          backgroundColor: Colors.headerTintColor}}
+                        onPress={() => params.handleSave()}
+                     />,
         headerTintColor: Colors.headerTintColor,
         headerStyle: {
            backgroundColor: Colors.headerColor
@@ -68,76 +78,130 @@ class RankScreen extends React.Component {
       };
     };
 
-    componentWillMount() {
-      apis.getVegetablePageConfig()
-        .then(({pageTotal}) => {
-          const { vegetable } = this.state;
-          vegetable.maxPageSize = Math.ceil(pageTotal/vegetable.pageSize);
-          this.setState({ vegetable });
-        });
-      apis.getSeafoodPageConfig()
-        .then(({pageTotal}) => {
-          const { fish } = this.state;
-          fish.maxPageSize = Math.ceil(pageTotal/fish.pageSize);
-          this.setState({ fish });
-        });
-    }
     componentDidMount() {
-      this._AnimatedStart(1, 1000);
-      this.makeRemoteRequest();
+      this.props.navigation.setParams({
+        title: `蔬果`,
+        next: `海鮮`,
+        handleSave: this._switchToSeafoodList
+      });
+        this.makeRemoteRequest();
+        apis.getVegetablePageConfig()
+          .then(({pageTotal}) => {
+            const { vegetable, pageSize } = this.state;
+            vegetable.maxPageSize = Math.ceil(pageTotal/pageSize);
+            this.setState({ vegetable });
+          });
+        apis.getSeafoodPageConfig()
+          .then(({pageTotal}) => {
+            const { seafood, pageSize } = this.state;
+            seafood.maxPageSize = Math.ceil(pageTotal/pageSize);
+            this.setState({ seafood });
+          });
+    }
+
+
+    _initlPageState() {
+      this.setState({
+        ...this.state,
+        loading: false,
+        data: [],
+        page: 1,
+        seed: 1,
+        error: null,
+        refreshing: false,
+        sort: '蔬果',
+        maxPageSize: 1,
+        lastKnownVal: null,
+      },
+      () => {
+        this.makeRemoteRequest();
+      });
+    }
+
+    _switchToSeafoodList(){
+      this._initlPageState();
+      this.setState({'sort': '海鮮'});
+      this.props.navigation.setParams(
+        {
+        title: `海鮮`,
+        next: `蔬果`,
+        handleSave: this._switchToVegetableList
+        },
+        () => {
+          this.makeRemoteRequest();
+        }
+      );
+    }
+
+    _switchToVegetableList(){
+      this._initlPageState();
+      this.setState({
+        'sort': '蔬果'
+      });
+      this.props.navigation.setParams(
+        {
+          title: `蔬果`,
+          next: `海鮮`,
+          handleSave: this._switchToSeafoodList
+        }
+      );
     }
 
     _setFocusFood(category, id){
       this.props.navigation.navigate('FoodChart', { 'foodId': id, 'category': category  })
     }
+    _setFocusRecipe(recipeId){
+      this.props.navigation.navigate('RecipeDetail', { 'recipeId': recipeId })
+    }
 
     makeRemoteRequest = () => {
+      const { page, seed, sort, lastKnownVal } = this.state;
+
       this.setState({ loading: true });
       var measure = null;
       var id = null;
       var isFirstPage = false;
-      if( this.state.selectedIndex == 0 ){
-        const { page, seed, lastKnownVal, maxPageSize } = this.state.vegetable;
-        if(page>maxPageSize){
-          renderFooter();
-          return;
-        }
-        if(lastKnownVal){
-          measure = lastKnownVal.measure;
-          id = lastKnownVal.id;
-        }else{
-          isFirstPage = true;
-        }
-        apis.getRankInVegetableByPageing( measure, id, isFirstPage )
-          .then(({vegetable_rank_data, lastKnownVal}) => {
-            const { vegetable } = this.state;
-            vegetable.lastKnownVal = lastKnownVal;
-            vegetable.data = page === 1 ? vegetable_rank_data : [...this.state.vegetable.data, ...vegetable_rank_data];
-            this.setState({
-              vegetable
-            });
-          })
+      if(lastKnownVal){
+        measure = lastKnownVal.measure;
+        id = lastKnownVal.id;
+      }else{
+        isFirstPage = true;
       }
-      if( this.state.selectedIndex == 1 || this.state.fish.data.length == 0 ){
-        const { page, seed, lastKnownVal, maxPageSize } = this.state.fish;
+      if(this.state.sort == '蔬果'){
+        const { maxPageSize } = this.state.vegetable;
+        console.log('page: '+page+'  maxPageSize: '+maxPageSize);
         if(page>maxPageSize){
+          this.setState({ loading: false });
+          this.renderFooter();
           return;
         }
-        if(lastKnownVal){
-          measure = lastKnownVal.measure;
-          id = lastKnownVal.id;
-        }else{
-          isFirstPage = true;
-        }
-        apis.getRankInSeafoodByPageing( measure, id, isFirstPage )
-          .then(({fish_rank_data, lastKnownVal}) => {
-            const { fish } = this.state;
-            fish.lastKnownVal = lastKnownVal;
-            fish.data = page === 1 ? fish_rank_data : [...this.state.fish.data, ...fish_rank_data];
+        apis.getRankInVegetableByPageing( measure, id, isFirstPage, page )
+          .then(({vegetable_rank_data, lastKnownVal}) => {
             this.setState({
-              fish
+              data: page === 1 ? vegetable_rank_data : [...this.state.data, ...vegetable_rank_data],
+              loading: false,
+              refreshing: false,
+              lastKnownVal: lastKnownVal,
+              maxPageSize: maxPageSize
             });
-          })
+          });
+      }else if(this.state.sort == '海鮮'){
+        const { maxPageSize } = this.state.seafood;
+        if(page>maxPageSize){
+          this.setState({ loading: false });
+          this.renderFooter();
+          return;
+        }
+        apis.getRankInSeafoodByPageing( measure, id, isFirstPage, page )
+          .then(({seafood_rank_data, lastKnownVal}) => {
+            this.setState({
+              data: page === 1 ? seafood_rank_data : [...this.state.data, ...seafood_rank_data],
+              loading: false,
+              refreshing: false,
+              lastKnownVal: lastKnownVal,
+              maxPageSize: maxPageSize
+            });
+          });
       }
 
     };
@@ -146,7 +210,7 @@ class RankScreen extends React.Component {
       this.setState(
         {
           page: 1,
-          seed: this.state.fish.seed + 1,
+          seed: this.state.seed + 1,
           refreshing: true
         },
         () => {
@@ -155,53 +219,52 @@ class RankScreen extends React.Component {
       );
     };
 
-    handleLoadMore_vegetable = () => {
-      const { vegetable } = this.state;
-      vegetable.page = this.state.vegetable.page + 1
+    handleLoadMore = () => {
       this.setState(
-        { vegetable },
+        {
+          page: this.state.page + 1
+        },
         () => {
           this.makeRemoteRequest();
         }
       );
     };
 
-    handleLoadMore_fish = () => {
-      const { fish } = this.state;
-      fish.page = this.state.fish.page + 1
-      this.setState(
-        { fish },
-        () => {
-          this.makeRemoteRequest();
-        }
-      );
-    };
     renderSeparator = () => {
       return (
         <View
           style={{
-            height: 1,
+            height: 0,
             width: "86%",
-            // backgroundColor: "#CED0CE",
+            backgroundColor: "#CED0CE",
             marginLeft: "14%"
           }}
         />
       );
     };
 
-    renderHeader = () => {
-      return <SearchBar placeholder="Type Here..." lightTheme round />;
-    };
-
     renderFooter = () => {
-      if (!this.state.loading) return null;
+      if (!this.state.loading){
+        return (
+          <Badge
+            value={'已到底部'}
+            textStyle={{ color: Colors.backgroundColor, fontWeight: 'bold' }}
+            containerStyle={{
+              backgroundColor: Colors.elementeTintColor,
+              width: screen.width-40,
+              alignSelf: 'center',
+              marginTop: 10
+            }}
+          />
+        );
+      }
 
       return (
         <View
           style={{
             paddingVertical: 0,
             borderTopWidth: 1,
-            // borderColor: "#CED0CE"
+            borderColor: "#CED0CE"
           }}
         >
           <ActivityIndicator animating size="large" />
@@ -209,113 +272,44 @@ class RankScreen extends React.Component {
       );
     };
 
-
-    _AnimatedStart(value, duration){
-      Animated.timing(
-        this.state.fadeAnim,
-        {
-          toValue: value,
-          duration: duration
-        }
-      ).start();
-    }
-
-    updateIndex (selectedIndex) {
-      if(this.state.selectedIndex == selectedIndex){
-        return;
+    renderItem = ({item}) => {
+      if(this.state.sort == '蔬果'){
+        return (
+          <RankCard
+            id={item.id}
+            onPress={() => this._setFocusFood('vegetable', item.id)}
+            imageUrl={`http://fs-old.mis.kuas.edu.tw/~s1103137212/ingredient/${item.id}.jpg`}
+          ></RankCard>
+        );
+      }else if(this.state.sort == '海鮮'){
+        return (
+          <RankCard
+            id={item.id}
+            onPress={() => this._setFocusFood('seafood', item.id)}
+            imageUrl={`http://fs-old.mis.kuas.edu.tw/~s1103137212/ingredient/${item.id}.jpg`}
+          ></RankCard>
+        );
       }
-      if(selectedIndex ==0){
-        this.refs.seafoodFlatListRef.scrollToOffset({x: 0, y: 0, animated: true})
-      }else if(selectedIndex ==1){
-        this.refs.vegetableFlatListRef.scrollToOffset({x: 0, y: 0, animated: true})
-      }
-        this._AnimatedStart(0, 0);
-        this._AnimatedStart(1, 500);
-
-      this.setState({selectedIndex})
-    }
-
-    scrollView(selectedIndex, buttons){
-      var updateIndex = this.updateIndex.bind(this);
-      let { fadeAnim } = this.state;
-      return (
-        <ImageBackground source={require('../assets/images/default-backgroud.png')} style={styles.wrapper} >
-          <ButtonGroup
-            onPress={updateIndex}
-            selectedIndex={selectedIndex}
-            selectedBackgroundColor={Colors.elementeBackgroundColor}
-            buttons={buttons} />
-              <Animated.View style={{opacity: fadeAnim}}>
-                <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0, marginTop: 0, backgroundColor: Colors.backgroundColor }}>
-                  {
-                    selectedIndex == 0
-                    ? (
-                        <ImageBackground source={require('../assets/images/default-backgroud.png')} style={styles.backgroundImage} >
-                          <FlatList
-                            ref="vegetableFlatListRef"
-                            data={this.state.vegetable.data}
-                            renderItem={({ item }) => (
-                              <TouchableOpacity
-                                onPress={() => this._setFocusFood('vegetable', item.id)} >
-                                <RankCard
-                                  id={item.id}
-                                  imageUrl={`http://fs-old.mis.kuas.edu.tw/~s1103137212/ingredient/${item.id}.jpg`}
-                                ></RankCard>
-                              </TouchableOpacity>
-                            )}
-                            keyExtractor={item => item.id}
-                            ItemSeparatorComponent={this.renderSeparator}
-                            // onRefresh={this.handleRefresh}
-                            // refreshing={this.state.refreshing}
-                            onEndReached={this.handleLoadMore_vegetable}
-                            onEndReachedThreshold={1}
-                          />
-                        </ImageBackground>
-                    ) :(
-                      <ImageBackground source={require('../assets/images/default-backgroud.png')} style={styles.backgroundImage} >
-                        <FlatList
-                          ref="seafoodFlatListRef"
-                          data={this.state.fish.data}
-                          renderItem={({ item }) => (
-                            <TouchableOpacity
-                              // key={item.id+'touch'}
-                              onPress={() => this._setFocusFood('seafood', item.id)} >
-                              <RankCard
-                                id={item.id}
-                                imageUrl={`http://fs-old.mis.kuas.edu.tw/~s1103137212/ingredient/${item.id}.jpg`}
-                              ></RankCard>
-                            </TouchableOpacity>
-                          )}
-                          keyExtractor={item => item.id}
-                          ItemSeparatorComponent={this.renderSeparator}
-                          // onRefresh={this.handleRefresh}
-                          // refreshing={this.state.refreshing}
-                          onEndReached={this.handleLoadMore_fish}
-                          onEndReachedThreshold={1}
-                        />
-                      </ImageBackground>
-                    )
-                  }
-                </List>
-              </Animated.View>
-        </ImageBackground>
-      );
-    }
+    };
 
     render() {
-      const component1 = () => <Text style={styles.textMainColor}>蔬果</Text>
-      const component2 = () => <Text style={styles.textMainColor}>漁貨</Text>
-      const buttons = [{ element: component1 }, { element: component2 }];
-      const { selectedIndex } = this.state;
-      if(this.props.isLoad){
-        return(
-          this.scrollView(selectedIndex ,buttons)
-        );
-      }else{
-        return (
-            <Image source={require('../assets/gif/loading.gif')} style={styles.loading} />
-        );
-      }
+      return (
+        <ImageBackground source={require('../assets/images/default-backgroud.png')} style={styles.wrapper} >
+          <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0, marginTop: 0, backgroundColor: Colors.backgroundColor }}>
+            <ImageBackground source={require('../assets/images/default-backgroud.png')} style={styles.backgroundImage} >
+              <FlatList
+                data={this.state.data}
+                renderItem={this.renderItem}
+                keyExtractor={item => item.key}
+                ItemSeparatorComponent={this.renderSeparator}
+                ListFooterComponent={this.renderFooter}
+                onEndReached={this.handleLoadMore}
+                onEndReachedThreshold={2}
+              />
+            </ImageBackground>
+          </List>
+        </ImageBackground>
+      );
     }
 }
 
@@ -326,7 +320,7 @@ const styles = StyleSheet.create({
   wrapper: {
     width: screen.width,
     paddingTop: 0,
-    paddingBottom: 20,
+    paddingBottom: 0,
     backgroundColor: Colors.backgroundColor,
     flex: 1,
   },

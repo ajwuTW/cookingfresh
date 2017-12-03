@@ -11,7 +11,7 @@ import {
   ImageBackground
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
-import { List, ListItem, SearchBar, Badge, Card } from "react-native-elements";
+import { List, ListItem, SearchBar, Badge, Card, Tile } from "react-native-elements";
 import { connect } from 'react-redux';
 
 import * as actions from '../actions';
@@ -255,28 +255,27 @@ class SearchScreen extends React.Component {
       );
     }else if(this.state.sort == '食材'){
       return (
-        <TouchableOpacity
-          // key={item.id+'touch'}
-          onPress={() => this._setFocusFood(item.IngredientKind, item.IngredientId)} >
-          <RankCard
-            id={item.IngredientId}
-            imageUrl={`http://fs-old.mis.kuas.edu.tw/~s1103137212/ingredient/${item.IngredientId}.jpg`}
-          ></RankCard>
-        </TouchableOpacity>
+        <RankCard
+          id={item.IngredientId}
+          onPress={() => this._setFocusFood(item.IngredientKind, item.IngredientId)}
+          imageUrl={`http://fs-old.mis.kuas.edu.tw/~s1103137212/ingredient/${item.IngredientId}.jpg`}
+        ></RankCard>
       );
     }else if(this.state.sort == '食譜'){
       return (
-        <TouchableOpacity
+        <View
           key={item.RecipeID}
-          onPress={() => this._setFocusRecipe(item.RecipeID)} >
-          <Card
+          style={{paddingTop:20}}>
+          <Tile
+            imageSrc={{uri: item.RecipePicture, cache: 'reload'}}
+            title={item.RecipeName}
             titleStyle={styles.textMainColor}
             containerStyle={styles.cardColor}
-            title={item.RecipeName}
-            imageProps={{resizeMode: 'cover'}}
-            image={{uri: item.RecipePicture}} >
-          </Card>
-        </TouchableOpacity>
+            onPress={() => this._setFocusRecipe(item.RecipeID)}
+            contentContainerStyle={{height: 70, marginTop:0}}
+          >
+          </Tile>
+        </View>
       );
     }
   };

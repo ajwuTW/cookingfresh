@@ -136,18 +136,17 @@ class RecipeDetailScreen extends React.Component {
                   this.props.isLogin
                   ? (
                     <Button
-                      raised icon={{name: 'add'}}
-                      backgroundColor='#1abc9c'
-                      textStyle={styles.textMainColor}
+                      raised icon={{name: 'add', color: Colors.headerTintColor}}
+                      textStyle={{color: Colors.headerTintColor}}
                       buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}, styles.buttonColor}
                       onPress={() => this._onCarPressButton()}
                       title='加入購物清單' />
                   ) : (
                     <Badge
                       value={'尚未登入 Facebook'}
-                      textStyle={{ color: 'white' }}
+                      textStyle={{ color: Colors.elementeBackgroundColor, fontWeight: 'bold' }}
                       containerStyle={{
-                        backgroundColor: '#95a5a6',
+                        backgroundColor: Colors.elementeTintColor,
                         width: screen.width-40,
                         alignSelf: 'center',
                         marginTop: 10

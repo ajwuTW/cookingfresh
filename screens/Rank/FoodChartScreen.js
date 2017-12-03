@@ -212,9 +212,9 @@ class FoodChartScreen extends React.Component {
             ? (
               <Badge
                 value={'找不到食譜'}
-                textStyle={{ color: 'white' }}
+                textStyle={{ color: Colors.backgroundColor, fontWeight: 'bold' }}
                 containerStyle={{
-                  backgroundColor: '#95a5a6',
+                  backgroundColor: Colors.elementeTintColor,
                   width: screen.width-80,
                   alignSelf: 'center',
                   marginTop: 5,
