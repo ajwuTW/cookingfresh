@@ -42,7 +42,8 @@ class FoodChartScreen extends React.Component {
         IngredientName: '',
         IngredientOriginName: ''
       },
-      isLoad:false
+      isLoad:false,
+      unit: '(元/公斤)'
     }
     this._setFocusRecipe = this._setFocusRecipe.bind(this);
     this._getConf = this._getConf.bind(this);
@@ -61,20 +62,23 @@ class FoodChartScreen extends React.Component {
   // LIFE CYCLE
   componentDidMount(){
     const { category, foodId } = this.props.navigation.state.params;
-    console.log(foodId);
+    var unit = '(元/公斤)';
+    if(foodId=='chicken'||foodId=='egg'){
+      unit = '(元/台斤)';
+    }
     AsyncStorage.getItem('food-'+foodId)
       .then((item) => {
            if (item) {
              this.setState({
                description: JSON.parse(item),
-               foodId
+               foodId, unit
              });
            }else {
              apis.getFoodDescriptionByFoodId(foodId).then(({description}) => {
                AsyncStorage.setItem('food-'+foodId, JSON.stringify(description));
                this.setState({
                  description: description,
-                 foodId
+                 foodId, unit
                });
                // this.updateData();
              }).catch((error)=>{
@@ -154,7 +158,7 @@ class FoodChartScreen extends React.Component {
       },
       tooltip: {
           headerFormat: '<b>{series.name}</b><br>',
-          pointFormat: '{point.x:%e. %b}: {point.y:.2f} '
+          pointFormat: '{point.x:%m/%d}: {point.y:.1f}'+this.state.unit
       },
       legend: {
         itemStyle: {
@@ -199,7 +203,7 @@ class FoodChartScreen extends React.Component {
   _getOptions = () => {
     return {
         global: { useUTC: false },
-        lang: { decimalPoint: ',', thousandsSep: '.' }
+        lang: { decimalPoint: '.', thousandsSep: ',' }
     }
   }
 

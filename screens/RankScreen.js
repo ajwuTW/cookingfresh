@@ -61,7 +61,7 @@ class RankScreen extends React.Component {
     static navigationOptions = ({navigation}) => {
       const { params = {} } = navigation.state;
       return {
-        title: '搜尋-'+params.title,
+        title: '排行榜-'+params.title,
         headerRight: <Badge value={params.next}
                         textStyle={{
                           color: Colors.headerColor,

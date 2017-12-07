@@ -65,6 +65,7 @@ class TobuyRecipeScreen extends React.Component {
               count={count}
               onPlusPress={this._plusRecipeQty}
               onMinusPress={this._minusRecipeQty}
+              onFocusRecipe={this.props.onSetFocusRecipe}
             ></RecipeCheckBoxRow>
           </View>
         );

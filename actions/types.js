@@ -40,3 +40,5 @@ export const TO_BUY_LIST_EXCEPTION_CHECKED_SUCCESS = 'to_buy_list_exception_chec
 export const TO_BUY_LIST_RECIPE_PLUS_SUCCESS = 'to_buy_list_recipe_plus_success';
 export const TO_BUY_LIST_RECIPE_MINUS_SUCCESS = 'to_buy_list_recipe_minus_success';
 export const TO_BUY_LIST_RECIPE_REMOVE_SUCCESS = 'to_buy_list_recipe_remove_success';
+
+export const TO_BUY_LIST_CLEAN_SUCCESS = 'to_buy_list_clean_success';

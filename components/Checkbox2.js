@@ -40,13 +40,13 @@ export default class Checkbox2 extends Component {
                       <Icon
                         name='check-square-o'
                         type='font-awesome'
-                        color='#f50'
+                        color={Colors.elementeTintColor}
                         iconStyle={{padding:5}}/>
                     ) : (
                       <Icon
                         name='square-o'
                         type='font-awesome'
-                        color='#f50'
+                        color={Colors.elementeTintColor}
                         iconStyle={{padding:5}}/>
                     )
                   }

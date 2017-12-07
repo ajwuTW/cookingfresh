@@ -9,7 +9,8 @@ import {
   TO_BUY_LIST_EXCEPTION_CHECKED_SUCCESS,
   TO_BUY_LIST_RECIPE_PLUS_SUCCESS,
   TO_BUY_LIST_RECIPE_MINUS_SUCCESS,
-  TO_BUY_LIST_RECIPE_REMOVE_SUCCESS
+  TO_BUY_LIST_RECIPE_REMOVE_SUCCESS,
+  TO_BUY_LIST_CLEAN_SUCCESS
 } from './types';
 
 export const initToBuyList = () => {
@@ -41,6 +42,17 @@ export const getToBuyList = (isLogin, uid) => {
   };
 };
 
+export const cleanTobuyList = () => {
+  return (dispatch) => {
+    const { currentUser } = firebase.auth();
+    var removeNode = { '/exception': null, '/food': null, '/list': null};
+    firebase.database().ref(`/users/${currentUser.uid}/toBuy`)
+        .update(removeNode);
+    dispatch({
+      type: TO_BUY_LIST_CLEAN_SUCCESS
+    })
+  }
+};
 
 export const setFoodChecked = ({uid, Checked}) => {
   return (dispatch) => {
@@ -52,7 +64,6 @@ export const setFoodChecked = ({uid, Checked}) => {
     })
   }
 };
-
 
 export const setExceptionChecked = ({uid, Checked}) => {
   return (dispatch) => {

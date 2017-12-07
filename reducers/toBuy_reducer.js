@@ -8,7 +8,8 @@ import {
   TO_BUY_LIST_EXCEPTION_CHECKED_SUCCESS,
   TO_BUY_LIST_RECIPE_PLUS_SUCCESS,
   TO_BUY_LIST_RECIPE_MINUS_SUCCESS,
-  TO_BUY_LIST_RECIPE_REMOVE_SUCCESS
+  TO_BUY_LIST_RECIPE_REMOVE_SUCCESS,
+  TO_BUY_LIST_CLEAN_SUCCESS
 } from '../actions/types';
 
 const INITIAL_STATE ={
@@ -40,6 +41,8 @@ export default function (state = INITIAL_STATE , action) {
     case TO_BUY_LIST_RECIPE_MINUS_SUCCESS:
       return { ...state};
     case TO_BUY_LIST_RECIPE_REMOVE_SUCCESS:
+      return { ...state};
+    case TO_BUY_LIST_CLEAN_SUCCESS:
       return { ...state};
     default:
       return state;

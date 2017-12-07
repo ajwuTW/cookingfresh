@@ -33,7 +33,6 @@ class RecipeCheckBoxRow extends Component {
              var description = item.description[0];
              var food = item.ingredient;
              var exception = item.exception;
-               console.log(description);
              this.setState({
                description, food, exception,
                isLoad: true
@@ -57,6 +56,7 @@ class RecipeCheckBoxRow extends Component {
       });
   }
 
+
   render() {
     var recipeId = this.props.uid;
     var count = this.props.count;
@@ -69,15 +69,22 @@ class RecipeCheckBoxRow extends Component {
         <View
           key={recipeId} style={styles.rowWrapper}>
           <View  style={styles.recipeText} >
-            <Text style={styles.textMainColor}>
-              {RecipeName}
-            </Text>
+            <View style={styles.textMainContent}>
+              <Icon
+                name='assignment'
+                color={Colors.headerColors}
+                onPress={() => this.props.onFocusRecipe(recipeId)}
+              />
+                <Text style={styles.textMainColor}>
+                  {RecipeName}
+                </Text>
+            </View>
             <Text style={ styles.textSubColor}>
               {' '+RecipeUnit+' 人份'}
             </Text>
             <Badge
               value={total+' 人份'}
-              containerStyle={{ backgroundColor: Colors.headerTintColor }}
+              containerStyle={{ backgroundColor: Colors.headerTintColor, width:SCREEN.width/5 }}
               textStyle={{ color: Colors.headerColor }}
               wrapperStyle={{padding:3}}
             />
@@ -87,13 +94,13 @@ class RecipeCheckBoxRow extends Component {
               name='plus'
               type='font-awesome'
               color={Colors.elementeTintColor}
-              iconStyle={{padding:3}}
+              iconStyle={{padding:2}}
               onPress={()=>this.props.onPlusPress(recipeId, description, food, exception)} />
             <Icon
               name='minus'
               type='font-awesome'
               color={Colors.elementeTintColor}
-              iconStyle={{padding:3}}
+              iconStyle={{padding:2}}
               onPress={()=>this.props.onMinusPress(recipeId, count, description, food, exception)} />
           </View>
         </View>
@@ -103,7 +110,7 @@ class RecipeCheckBoxRow extends Component {
         <View
           key={'none'} style={styles.rowWrapper}>
           <View  style={styles.recipeText} >
-            <Text style={{padding:3, width:180}}>
+            <Text style={{padding:3, width:160}}>
               {'載入中'}
             </Text>
           </View>
@@ -127,7 +134,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'space-between',
     marginLeft: 0,
-    padding:2
+    margin:2
   },
   recipePlusMinus: {
     flexDirection: 'row',
@@ -135,11 +142,19 @@ const styles = {
     padding:2
   },
   textMainColor: {
-    color: Colors.textMainColor,
-    margin: 3, width:150
+    color: Colors.textMainColor
+  },
+  textMainContent: {
+    margin: 1,
+    width:SCREEN.width/2.5,
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start'
   },
   textSubColor: {
-    color: Colors.textSubColor
+    color: Colors.textSubColor,
+    width: SCREEN.width/7
   },
 }
 

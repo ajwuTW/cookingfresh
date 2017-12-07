@@ -7,14 +7,15 @@ import {
   View,
   Image,
   TouchableOpacity,
-  ImageBackground
+  ImageBackground,
+  Alert
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ExpoLinksView } from '@expo/samples';
 import _ from 'lodash';
 
 import { connect } from 'react-redux';
-import { Badge, Button, Card, ListItem, List } from 'react-native-elements';
+import { Badge, Button, Card, ListItem, List, Icon } from 'react-native-elements';
 
 import * as actions from '../actions';
 import * as apis from '../api';
@@ -35,13 +36,22 @@ class TobuyListScreen extends React.Component {
       'page': '食材',
       isLoad: false
     }
+    this._cleanTonuyList = this._cleanTonuyList.bind(this);
     this._switchToRecipeList = this._switchToRecipeList.bind(this);
     this._switchToFoodList = this._switchToFoodList.bind(this);
+    this._setFocusRecipe = this._setFocusRecipe.bind(this);
   }
   static navigationOptions = ({navigation}) => {
     const { params = {} } = navigation.state;
     return {
       title: '購物清單-'+params.title,
+
+      headerLeft: <Icon
+                    name='delete'
+                    color={Colors.headerTintColor}
+                    containerStyle={{ marginLeft: 10}}
+                    onPress={() => params.cleanTobuy()}
+                  />,
       headerRight: <Badge value={params.next}
                       textStyle={{
                         color: Colors.headerColor,
@@ -62,12 +72,25 @@ class TobuyListScreen extends React.Component {
     this.props.navigation.setParams({
       title: `食材`,
       next: `食譜`,
-      handleSave: this._switchToRecipeList
+      handleSave: this._switchToRecipeList,
+      cleanTobuy: this._cleanTonuyList
     });
   }
 
   componentWillMount(){
     this.props.initToBuyList();
+  }
+
+  _cleanTonuyList(){
+    Alert.alert(
+      '是否清空購物清單',
+      '',
+      [
+        {text: '取消', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {text: '確認', onPress: () => this.props.cleanTobuyList()},
+      ],
+      { cancelable: false }
+    )
   }
 
   _switchToRecipeList(){
@@ -102,6 +125,11 @@ class TobuyListScreen extends React.Component {
     ).start();
   }
 
+  _setFocusRecipe(recipeId){
+    this.props.navigation.navigate('RecipeDetail', { 'recipeId': recipeId })
+  }
+
+
   // Modal 1: Recipe
   renderToBuyScreen(){
     if(this.state.page == '食材'){
@@ -110,7 +138,7 @@ class TobuyListScreen extends React.Component {
       );
     }else if(this.state.page == '食譜'){
       return(
-          <TobuyRecipeScreen></TobuyRecipeScreen>
+          <TobuyRecipeScreen onSetFocusRecipe={this._setFocusRecipe}></TobuyRecipeScreen>
       );
     }
   }

@@ -1,7 +1,6 @@
 const URL = "http://fs.mis.kuas.edu.tw/~s1103137212/topic_project/";
 
 export const getFoodByFoodId = (id) => {
-  console.log(id);
   return fetch(URL+'recipe_1.php?id='+id, {
       method: "GET",
       headers: {
