@@ -10,7 +10,6 @@ import {
 } from './types';
 
 export const loadRank_vegetable = (lastKnownVal) => {
-  const { currentUser } = firebase.auth();
   return (dispatch) => {
     var measure = null;
     var id = null;
@@ -51,9 +50,7 @@ export const loadRank_vegetable = (lastKnownVal) => {
 };
 
 export const loadRank_fish = () => {
-  const { currentUser } = firebase.auth();
   return (dispatch) => {
-
   firebase.database().ref(`/rank/seafood`)
       .orderByChild('measure')
       .limitToFirst(10)
@@ -75,13 +72,11 @@ export const loadRank_fish = () => {
 };
 
 export const checkAuthState = () => {
-  const { currentUser } = firebase.auth();
   return (dispatch) => {
     firebase.auth().onAuthStateChanged(function(user) {
+      var isLogin = false;
       if (user) {
-        var isLogin = true;
-      }else{
-        var isLogin = false;
+        isLogin = true;
       }
       dispatch({
         type: DATA_LOGIN_STATE,

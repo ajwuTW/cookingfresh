@@ -71,7 +71,8 @@ export const setRecipeToCar = ({ recipeid, description, food, exception, step })
            }
       });
 
-        const { currentUser } = firebase.auth();
+    const { currentUser } = firebase.auth();
+
     var updateToBuyList = firebase.database().ref(`/users/${currentUser.uid}/toBuy/list/${recipeid}`);
 
     updateToBuyList.transaction(function (current_value) {

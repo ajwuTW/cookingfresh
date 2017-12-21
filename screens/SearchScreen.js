@@ -128,7 +128,7 @@ class SearchScreen extends React.Component {
   }
 
   makeRemoteRequest = () => {
-    const { page, seed, sort, searchText, maxPageSize } = this.state;
+    const { page, searchText, maxPageSize } = this.state;
     if(page>maxPageSize){
       return;
     }

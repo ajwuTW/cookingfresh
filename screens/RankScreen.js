@@ -155,7 +155,7 @@ class RankScreen extends React.Component {
     }
 
     makeRemoteRequest = () => {
-      const { page, seed, sort, lastKnownVal } = this.state;
+      const { page, lastKnownVal } = this.state;
 
       this.setState({ loading: true });
       var measure = null;

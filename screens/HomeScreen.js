@@ -48,7 +48,6 @@ class HomeScreen extends React.Component {
   }
 
   async componentWillMount() {
-    let token = await AsyncStorage.getItem('fb_token');
     this.props.checkAuthState();
   }
 

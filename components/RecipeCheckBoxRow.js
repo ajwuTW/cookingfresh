@@ -24,15 +24,14 @@ class RecipeCheckBoxRow extends Component {
   }
   componentWillMount(){
     var id = this.props.uid;
-    var count = this.props.count;
     AsyncStorage.removeItem('recipe-'+id)
     AsyncStorage.getItem('recipe-'+id)
       .then((item) => {
            if (item) {
-             var item = JSON.parse(item);
-             var description = item.description[0];
-             var food = item.ingredient;
-             var exception = item.exception;
+             var itemJosn = JSON.parse(item);
+             var description = itemJosn.description[0];
+             var food = itemJosn.ingredient;
+             var exception = itemJosn.exception;
              this.setState({
                description, food, exception,
                isLoad: true

@@ -34,7 +34,6 @@ class TobuyFoodScreen extends React.Component {
     this._multiply = this._multiply.bind(this);
   }
   static navigationOptions = ({navigation}) => {
-    const { params = {} } = navigation.state;
     return {
       title: `購物清單-食材`,
       headerTintColor: Colors.headerTintColor,
@@ -60,7 +59,7 @@ class TobuyFoodScreen extends React.Component {
       this.props.setFoodChecked({uid, Checked: true});
     }
   }
-  
+
   _setExceptionChecked(exception, uid, checked){
     if(checked){
       this.props.setExceptionChecked({uid, Checked: false});

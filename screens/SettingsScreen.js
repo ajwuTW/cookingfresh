@@ -55,8 +55,7 @@ class SettingsScreen extends React.Component {
   }
 
   render() {
-    const { firebase, profile, isLogin } = this.props;
-    let { fadeAnim } = this.state;
+    const {  profile, isLogin } = this.props;
     return(
       <ImageBackground source={require('../assets/images/default-backgroud.png')} style={styles.wrapper} >
           <ScrollView style={styles.container}>

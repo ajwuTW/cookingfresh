@@ -9,11 +9,6 @@ import {
   FACEBOOK_LOGOUT_SUCCESS
 } from './types';
 
-
-// How to use AsyncStorage:
-// AsyncStorage.setItem('fb_token', token);
-// AsyncStorage.getItem('fb_token');
-
   export const fbLogin = () => async dispatch => {
     let token = await AsyncStorage.getItem('fb_token');
     if (token) {
@@ -33,7 +28,7 @@ import {
   }
 
   const doFbLogin = async dispatch => {
-    let { type, token, name } = await Facebook.logInWithReadPermissionsAsync('1845575732377967', {
+    let { type, token } = await Facebook.logInWithReadPermissionsAsync('1845575732377967', {
       permission: ['public_profile']
     });
     //get public_profile

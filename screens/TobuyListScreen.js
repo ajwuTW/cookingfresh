@@ -148,8 +148,6 @@ class TobuyListScreen extends React.Component {
   }
 
   render() {
-    let { fadeAnim } = this.state;
-
     if( !this.props.isLoad && this.props.isLogin){
       const { isLogin, uid } = this.props;
       this.props.getToBuyList(isLogin, uid);

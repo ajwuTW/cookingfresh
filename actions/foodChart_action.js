@@ -11,7 +11,6 @@ import {
 import * as api from '../api';
 
 export const setFocusFoodId = (category, id) => {
-  const { currentUser } = firebase.auth();
   return async (dispatch) => {
     dispatch({ type: FOOD_ID_FETCHING });
     var chartData = {
@@ -48,21 +47,21 @@ export const setFocusFoodId = (category, id) => {
           snapshot.forEach(function(childSnapshot) {
             var tmp = 1*childSnapshot.val();
             var date = childSnapshot.key;
-
+            var dot = [];
             if((currentToday-date)<=10000){
-              var dot = [
+              dot = [
                   Date.UTC(date.substring(0,4)-46, date.substring(4,6)-1, date.substring(6,8)),
                   tmp
               ];
               chartData['first'].push(dot);
             }else if((currentToday-date)<=20000){
-              var dot = [
+              dot = [
                   Date.UTC(date.substring(0,4)-45, date.substring(4,6)-1, date.substring(6,8)),
                   tmp
               ];
               chartData['second'].push(dot);
             }else if((currentToday-date)<=30000){
-              var dot = [
+              dot = [
                   Date.UTC(date.substring(0,4)-44, date.substring(4,6)-1, date.substring(6,8)),
                   tmp
               ];

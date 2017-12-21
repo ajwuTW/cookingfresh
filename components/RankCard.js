@@ -67,7 +67,6 @@ class RankCard extends Component {
   }
 
   render() {
-    var id = this.props.id;
     var imageUrl= this.props.imageUrl;
     const{ IngredientName, IngredientOriginName } = this.state.description;
     return (
