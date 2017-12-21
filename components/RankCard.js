@@ -51,7 +51,7 @@ class RankCard extends Component {
                });
              }).catch((error)=>{
                 console.log("Api call error");
-                alert(error.message);
+                console.log(error.message);
              })
            }
       });

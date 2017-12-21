@@ -32,7 +32,6 @@ export const setFocusRecipeId = (id, isLogin, uid) => {
       // Food
       api.getRecipeDetailByRecipeId(id)
         .then(({recipeDetail}) => {
-          console.log(recipeDetail);
           var description = recipeDetail.description[0];
           var food = recipeDetail.ingredient;
           var exception = recipeDetail.exception;
@@ -43,7 +42,7 @@ export const setFocusRecipeId = (id, isLogin, uid) => {
           })
         }).catch((error)=>{
            console.log("Api call error");
-           alert(error.message);
+           console.log(error.message);
         })
 
 
@@ -65,7 +64,6 @@ export const setRecipeToCar = ({ recipeid, description, food, exception, step })
     AsyncStorage.getItem('recipe-'+recipeid)
       .then((item) => {
            if (item) {
-             console.log('item');
              console.log(item);
            }else {
              var recipe = { description, food, exception, step }

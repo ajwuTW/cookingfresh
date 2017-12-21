@@ -102,7 +102,11 @@ class TobuyListScreen extends React.Component {
       });
       this.setState({'page': '食譜'});
     }else{
-      alert("請先登入 Facebook");
+      Alert.alert(
+        '請先登入 Facebook', '',
+        [ {text: '確認'} ],
+        { cancelable: false }
+      )
     }
   }
 

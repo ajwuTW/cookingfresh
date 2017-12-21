@@ -60,14 +60,7 @@ class TobuyFoodScreen extends React.Component {
       this.props.setFoodChecked({uid, Checked: true});
     }
   }
-
-  _setFoodChecked(food, uid, checked){
-    if(checked){
-      this.props.setFoodChecked({uid, Checked: false});
-    }else{
-      this.props.setFoodChecked({uid, Checked: true});
-    }
-  }
+  
   _setExceptionChecked(exception, uid, checked){
     if(checked){
       this.props.setExceptionChecked({uid, Checked: false});

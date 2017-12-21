@@ -79,7 +79,7 @@ export const setFocusFoodId = (category, id) => {
             dispatch({ type: FOOD_ID_FETCH_SUCCESS_RECIPE, payload: { id, recipeList } })
           }).catch((error)=>{
              console.log("Api call error");
-             alert(error.message);
+             console.log(error.message);
           })
         });
   };

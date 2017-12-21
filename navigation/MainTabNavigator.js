@@ -50,7 +50,7 @@ export default TabNavigator(
             name={iconName}
             size={28}
             style={{ marginBottom: -3 }}
-            color={focused ? ColorsTheme.headerTintColor : ColorsTheme.headerTintColor}
+            color={focused ? ColorsTheme.headerTintColor : ColorsTheme.backgroundColor}
           />
         );
       },

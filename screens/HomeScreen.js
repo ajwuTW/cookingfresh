@@ -57,11 +57,7 @@ class HomeScreen extends React.Component {
       <ImageBackground source={require('../assets/images/default-backgroud.png')} style={styles.wrapper} >
         <View style={styles.welcomeContainer}>
           <Image
-            source={
-              __DEV__
-                ? require('../assets/images/CookingFresh-icon-v2.png')
-                : require('../assets/images/CookingFresh-icon-v2.png')
-            }
+            source={require('../assets/images/CookingFresh-icon-v2.png')}
             style={styles.welcomeImage}
           />
         </View>
