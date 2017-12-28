@@ -88,7 +88,6 @@ export const plusRecipeQty = ({recipeId, description, food, exception}) => {
       var foodData={...personal_toBuy.food};
       var exceptionData={...personal_toBuy.exception};
       var lastLoginData = { datetime: new Date()+""};
-      var count;
       if (personal_toBuy.list !== undefined
         && personal_toBuy.list[recipeId] !== undefined) {
           listdata[recipeId].count = listdata[recipeId].count+1;
@@ -99,7 +98,7 @@ export const plusRecipeQty = ({recipeId, description, food, exception}) => {
         foodData = util.formatPlusData(food[f], personal_toBuy.food)
       }
       for (var e in exception) {
-        exceptionData = util.formatPlusData_Exception(exception[f], personal_toBuy.exception)
+        exceptionData = util.formatPlusData_Exception(exception[e], personal_toBuy.exception)
       }
       return {
         lastLoginDate: lastLoginData,
@@ -125,7 +124,6 @@ export const minusRecipeQty = ({recipeId, description, food, exception}) => {
       var foodData={...personal_toBuy.food};
       var exceptionData={...personal_toBuy.exception};
       var lastLoginData = { datetime: new Date()+""};
-      var count;
       if (personal_toBuy.list !== undefined
         && personal_toBuy.list[recipeId] !== undefined) {
           listdata[recipeId].count = listdata[recipeId].count-1;
@@ -136,7 +134,7 @@ export const minusRecipeQty = ({recipeId, description, food, exception}) => {
         foodData = util.formatMinusData(food[f], personal_toBuy.food)
       }
       for (var e in exception) {
-        exceptionData = util.formatMinusData_Exception(exception[f], personal_toBuy.exception)
+        exceptionData = util.formatMinusData_Exception(exception[e], personal_toBuy.exception)
       }
       return {
         lastLoginDate: lastLoginData,
@@ -162,13 +160,12 @@ export const removeRecipe = ({recipeId, description, food, exception}) => {
       var foodData={...personal_toBuy.food};
       var exceptionData={...personal_toBuy.exception};
       var lastLoginData = { datetime: new Date()+""};
-      var count;
       listdata[recipeId] = null ;
       for (var f in food) {
         foodData = util.formatMinusData(food[f], personal_toBuy.food)
       }
       for (var e in exception) {
-        exceptionData = util.formatMinusData_Exception(exception[f], personal_toBuy.exception)
+        exceptionData = util.formatMinusData_Exception(exception[e], personal_toBuy.exception)
       }
       return {
         lastLoginDate: lastLoginData,

@@ -80,7 +80,7 @@ export const setRecipeToCar = ({ recipeid, description, food, exception, step })
       var foodData={...personal_toBuy.food};
       var exceptionData={...personal_toBuy.exception};
       var lastLoginData = { datetime: new Date()+""};
-      var count;
+      
       if (personal_toBuy.list !== undefined
         && personal_toBuy.list[recipeid] !== undefined) {
           listdata[recipeid].count = listdata[recipeid].count+1;
@@ -91,7 +91,7 @@ export const setRecipeToCar = ({ recipeid, description, food, exception, step })
         foodData = util.formatPlusData(food[f], personal_toBuy.food);
       }
       for (var e in exception) {
-        exceptionData = util.formatPlusData_Exception(exception[f], personal_toBuy.exception);
+        exceptionData = util.formatPlusData_Exception(exception[e], personal_toBuy.exception);
       }
       return {
         lastLoginDate: lastLoginData,
