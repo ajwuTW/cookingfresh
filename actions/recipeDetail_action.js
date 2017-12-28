@@ -72,46 +72,93 @@ export const setRecipeToCar = ({ recipeid, description, food, exception, step })
       });
 
     const { currentUser } = firebase.auth();
+    var updateToBuyList = firebase.database().ref(`/users/${currentUser.uid}/toBuy/`);
 
-    var updateToBuyList = firebase.database().ref(`/users/${currentUser.uid}/toBuy/list/${recipeid}`);
-
-    updateToBuyList.transaction(function (current_value) {
+    updateToBuyList.transaction(function (personal_toBuy) {
+      var listdata={...personal_toBuy.list};
+      var foodData={...personal_toBuy.food};
+      var exceptionData={...personal_toBuy.exception};
+      var lastLoginData = { datetime: new Date()+""};
       var count;
-      if (current_value === null) {
-        count = 1;
+      if (personal_toBuy.list !== undefined
+        && personal_toBuy.list[recipeid] !== undefined) {
+          listdata[recipeid].count = listdata[recipeid].count+1;
       }else{
-        count = current_value.count+1;
+          listdata[recipeid]={ count: 1};
       }
-      return { count };
+      for (var f in food) {
+        var { IngredientName, IngredientUnit, IngredientQty } = food[f];
+        var count_ingredient=1, Checked_ingredient= false;
+        if (personal_toBuy.food !== undefined
+          && personal_toBuy.food[IngredientName] !== undefined) {
+            count_ingredient = personal_toBuy.food[IngredientName].count+1;
+        }
+        foodData[IngredientName] = {
+          IngredientName, IngredientUnit , IngredientQty,
+          Checked: Checked_ingredient,
+          count: count_ingredient
+        }
+      }
+      for (var e in exception) {
+        var { IngredientName, IngredientUnit } = exception[e];
+        var count_exception=1, Checked_exception= false;
+        if ( personal_toBuy.exception !== undefined
+          && personal_toBuy.exception[IngredientName] !== undefined) {
+          count_exception = personal_toBuy.exception[IngredientName].count+1;
+        }
+        exceptionData[IngredientName] = {
+          IngredientName, IngredientUnit,
+          Checked: Checked_exception,
+          count: count_exception
+        }
+      }
+      return {
+        lastLoginDate: lastLoginData,
+        list: listdata,
+        food: foodData,
+        exception: exceptionData
+      };
     });
 
-    for (var f in food) {
-      var { IngredientName, IngredientUnit, IngredientQty } = food[f];
-      var updateToBuyFood = firebase.database().ref(`/users/${currentUser.uid}/toBuy/food/${IngredientName}`);
-      updateToBuyFood.transaction(function (current_value) {
-        var count, Checked= false;
-        if (current_value === null) {
-          count = 1;
-        }else{
-          count = current_value.count+1;
-        }
-        return { IngredientName, IngredientUnit , IngredientQty, Checked, count};
-      });
-    }
-
-    for (var e in exception) {
-      var { IngredientName, IngredientUnit } = exception[e];
-      var updateToBuyException = firebase.database().ref(`/users/${currentUser.uid}/toBuy/exception/${IngredientName}`);
-      updateToBuyException.transaction(function (current_value) {
-        var count, Checked= false;
-        if (current_value === null) {
-          count = 1;
-        }else{
-          count = current_value.count+1;
-        }
-        return { IngredientName, IngredientUnit, Checked, count};
-      });
-    }
+    // var updateToBuyList = firebase.database().ref(`/users/${currentUser.uid}/toBuy/list/${recipeid}`);
+    //
+    // updateToBuyList.transaction(function (current_value) {
+    //   var count;
+    //   if (current_value === null) {
+    //     count = 1;
+    //   }else{
+    //     count = current_value.count+1;
+    //   }
+    //   return { count };
+    // });
+    //
+    // for (var f in food) {
+    //   var { IngredientName, IngredientUnit, IngredientQty } = food[f];
+    //   var updateToBuyFood = firebase.database().ref(`/users/${currentUser.uid}/toBuy/food/${IngredientName}`);
+    //   updateToBuyFood.transaction(function (current_value) {
+    //     var count, Checked= false;
+    //     if (current_value === null) {
+    //       count = 1;
+    //     }else{
+    //       count = current_value.count+1;
+    //     }
+    //     return { IngredientName, IngredientUnit , IngredientQty, Checked, count};
+    //   });
+    // }
+    //
+    // for (var e in exception) {
+    //   var { IngredientName, IngredientUnit } = exception[e];
+    //   var updateToBuyException = firebase.database().ref(`/users/${currentUser.uid}/toBuy/exception/${IngredientName}`);
+    //   updateToBuyException.transaction(function (current_value) {
+    //     var count, Checked= false;
+    //     if (current_value === null) {
+    //       count = 1;
+    //     }else{
+    //       count = current_value.count+1;
+    //     }
+    //     return { IngredientName, IngredientUnit, Checked, count};
+    //   });
+    // }
 
     dispatch({
       type: RECIPE_TO_CAR_SUCCESS

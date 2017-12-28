@@ -45,7 +45,7 @@ import {
     firebase.auth().signInWithCredential(credential)
       .then((user) => {
         firebase.database().ref(`/users/${user.uid}/toBuy/`)
-            .update({'laseLoginDate': new Date()});
+            .update({'lastLoginDate': new Date()});
       }).catch((err) => {
            console.error('User signin error', err);
     });
