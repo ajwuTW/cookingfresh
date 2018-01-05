@@ -8,7 +8,10 @@ import configureStore from 'redux-mock-store';
 const middlewares = []; // you can mock any middlewares here if necessary
 const mockStore = configureStore(middlewares);
 
-
+// it('renders the loading screen', async () => {
+//   const tree = renderer.create(<App />).toJSON();
+//   expect(tree).toMatchSnapshot();
+// });
 
 const initialState = {
 };
