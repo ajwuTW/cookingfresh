@@ -10,7 +10,8 @@ import RootNavigation from './navigation/RootNavigation';
 import store from './store';
 
 import {
-  FIREBASE_CONFIG
+  FIREBASE_CONFIG,
+  FIREBASE_CONFIG_JEST
 } from './config/connect';
 
 export default class App extends React.Component {
@@ -18,9 +19,16 @@ export default class App extends React.Component {
     isLoadingComplete: false,
   };
 
+  _initializeFirebase(){
+    var config = FIREBASE_CONFIG;
+     //initialize firebase
+     firebase.initializeApp(config);
+  }
+
   componentWillMount() {
-    const config = FIREBASE_CONFIG;
-    firebase.initializeApp(config);
+    if (firebase.apps.length === 0) {
+      this._initializeFirebase();
+    }
     this._loadResourcesAsync();
   }
 
