@@ -5,6 +5,8 @@
     "test": "node ./node_modules/jest/bin/jest.js --watch"
   },
   "jest": {
+    "collectCoverage": true,
+    "coverageFormats": ["json", "html"],
     "preset": "jest-expo"
   },
   "dependencies": {
