@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+  <file path="/Users/AJ/reactJS/foodFinal/cookingfresh/__tests__/App-test.js">
+    <testCase name="Testing App renders as expected" duration="59"/>
+  </file>
+</testExecutions>

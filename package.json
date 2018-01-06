@@ -7,7 +7,7 @@
   "jest": {
     "collectCoverage": true,
     "preset": "jest-expo",
-    "testResultsProcessor": "jest-sonar-reporter"
+    "testResultsProcessor": "jest-junit"
   },
   "dependencies": {
     "@expo/samples": "2.1.1",
